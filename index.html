@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EhtAlem Platform - Empowering Ethiopian Women Entrepreneurs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+    <script src="https://unpkg.com/splitting@1.0.6/dist/splitting.js"></script>
+    <link href="https://unpkg.com/splitting@1.0.6/dist/splitting.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 50%, #f3e8ff 100%);
+            min-height: 100vh;
+        }
+        .hero-section {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+        }
+        .feature-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(236, 72, 153, 0.15);
+        }
+        .cta-button {
+            background: linear-gradient(45deg, #ec4899, #a855f7);
+            transition: all 0.3s ease;
+        }
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(236, 72, 153, 0.3);
+        }
+        .stats-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+        }
+        .floating-element {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        .typewriter-text {
+            border-right: 2px solid #ec4899;
+        }
+        .gradient-text {
+            background: linear-gradient(45deg, #ec4899, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .bottom-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(236, 72, 153, 0.1);
+        }
+        .nav-item {
+            transition: all 0.3s ease;
+        }
+        .nav-item.active {
+            color: #ec4899;
+        }
+        .nav-item:hover {
+            color: #ec4899;
+        }
+        .language-btn {
+            background: linear-gradient(45deg, #10b981, #059669);
+            transition: all 0.3s ease;
+        }
+        .language-btn:hover {
+            transform: scale(1.05);
+        }
+        .hero-image {
+            background-image: url('https://kimi-web-img.moonshot.cn/img/ministerialleadership.harvard.edu/cba7eb2d971315b9502d054e85ac7322cf7190ad.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .amharic-text {
+            font-family: 'Noto Sans Ethiopic', sans-serif;
+        }
+        [data-lang="am"] .amharic-only {
+            display: block;
+        }
+        [data-lang="am"] .english-only {
+            display: none;
+        }
+        [data-lang="en"] .amharic-only {
+            display: none;
+        }
+        [data-lang="en"] .english-only {
+            display: block;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="bg-white/80 backdrop-blur-md border-b border-pink-100 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full flex items-center justify-center">
+                        <span class="text-white font-bold text-sm">E</span>
+                    </div>
+                    <span class="text-xl font-bold text-gray-800">EhtAlem</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="index.html" class="text-pink-600 font-medium english-only">Home</a>
+                    <a href="index.html" class="text-pink-600 font-medium amharic-only amharic-text">ዋና ገፅ</a>
+                    
+                    <a href="forums.html" class="text-gray-600 hover:text-pink-600 transition-colors english-only">Forums</a>
+                    <a href="forums.html" class="text-gray-600 hover:text-pink-600 transition-colors amharic-only amharic-text">መድረኮች</a>
+                    
+                    <a href="mentorship.html" class="text-gray-600 hover:text-pink-600 transition-colors english-only">Mentors</a>
+                    <a href="mentorship.html" class="text-gray-600 hover:text-pink-600 transition-colors amharic-only amharic-text">አስተማሪዎች</a>
+                    
+                    <a href="opportunities.html" class="text-gray-600 hover:text-pink-600 transition-colors english-only">Opportunities</a>
+                    <a href="opportunities.html" class="text-gray-600 hover:text-pink-600 transition-colors amharic-only amharic-text">አጋጣሚዎች</a>
+                    
+                    <a href="about.html" class="text-gray-600 hover:text-pink-600 transition-colors english-only">About</a>
+                    <a href="about.html" class="text-gray-600 hover:text-pink-600 transition-colors amharic-only amharic-text">ስለ እኛ</a>
+                    
+                    <button id="languageToggle" class="language-btn text-white px-4 py-2 rounded-lg font-medium">
+                        <span class="english-only">አማርኛ</span>
+                        <span class="amharic-only amharic-text">English</span>
+                    </button>
+                    
+                    <a href="authentication.html" class="cta-button text-white px-4 py-2 rounded-lg font-medium">
+                        <span class="english-only">Join Community</span>
+                        <span class="amharic-only amharic-text">ቡድን ይቀላቀሉ</span>
+                    </a>
+                </div>
+                <div class="md:hidden flex items-center space-x-2">
+                    <button id="mobileLanguageToggle" class="language-btn text-white px-3 py-1 rounded text-sm">
+                        <span class="english-only">አማ</span>
+                        <span class="amharic-only amharic-text">EN</span>
+                    </button>
+                    <button id="mobileMenuBtn" class="text-gray-600 hover:text-pink-600">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section py-20 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="text-center lg:text-left">
+                    <h1 class="text-5xl lg:text-6xl font-bold text-gray-800 mb-6">
+                        <span class="gradient-text english-only">Empowering Ethiopian Women</span>
+                        <span class="gradient-text amharic-only amharic-text">ኢትዮጵያዊ ሴቶችን ማብቃት</span>
+                        <br>
+                        <span id="typewriter-text" class="typewriter-text"></span>
+                    </h1>
+                    <p class="text-xl text-gray-600 mb-8 max-w-2xl english-only">
+                        A comprehensive platform designed specifically for Ethiopian women entrepreneurs like Selam, 
+                        providing sisterhood support, AI-powered mentorship, skill exchange, and opportunities - 
+                        all in one safe, culturally authentic space.
+                    </p>
+                    <p class="text-xl text-gray-600 mb-8 max-w-2xl amharic-only amharic-text">
+                        ሴላምን እንደ ኢትዮጵያዊት ሴት ፈጣን እንደሆነች ሴት ለመሆን በተዘጋጀ የተዘጋጀ መድረክ፣ እህትነት ድጋፍ፣ የኤአይ ኃይል ያለው አስተማሪነት፣ ክህሎት ልውውጥ እና አጋጣሚዎችን የሚያቀርብ - በአንድ ደህና የባህል ቦታ።
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <a href="authentication.html" class="cta-button text-white px-8 py-4 rounded-lg font-medium text-lg inline-flex items-center justify-center">
+                            <span class="english-only"><i class="fas fa-user-plus mr-2"></i>Join Our Community</span>
+                            <span class="amharic-only amharic-text"><i class="fas fa-user-plus mr-2"></i>ቡድናችን ይቀላቀሉ</span>
+                        </a>
+                        <a href="forums.html" class="border-2 border-pink-500 text-pink-600 px-8 py-4 rounded-lg font-medium text-lg hover:bg-pink-50 transition-colors inline-flex items-center justify-center">
+                            <span class="english-only"><i class="fas fa-comments mr-2"></i>Explore Forums</span>
+                            <span class="amharic-only amharic-text"><i class="fas fa-comments mr-2"></i>መድረኮችን ያስሱ</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="floating-element">
+                        <div class="bg-white/90 backdrop-blur-md rounded-3xl p-8 shadow-2xl">
+                            <div class="hero-image w-full h-64 rounded-2xl mb-6 flex items-end justify-start p-6">
+                                <div class="bg-black/50 text-white p-4 rounded-lg">
+                                    <h3 class="text-2xl font-bold mb-2 english-only">Selam's Journey</h3>
+                                    <h3 class="text-2xl font-bold mb-2 amharic-only amharic-text">ሴላም ጉዞ</h3>
+                                    <p class="text-sm english-only">From solo entrepreneur to thriving business owner</p>
+                                    <p class="text-sm amharic-only amharic-text">ከብቸኛ ፈጣን ወደተሳካ ቢዝነስ ባለቤት</p>
+                                </div>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-check text-white text-sm"></i>
+                                    </div>
+                                    <span class="text-gray-700 english-only">Connected with sisterhood community</span>
+                                    <span class="text-gray-700 amharic-only amharic-text">ከእህትነት ማህበረሰብ ጋር ተገናኘ</span>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-check text-white text-sm"></i>
+                                    </div>
+                                    <span class="text-gray-700 english-only">Found AI-powered mentor match</span>
+                                    <span class="text-gray-700 amharic-only amharic-text">የኤአይ ኃይል ያለው አስተማሪ ተዛመደ</span>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-check text-white text-sm"></i>
+                                    </div>
+                                    <span class="text-gray-700 english-only">Exchanged skills for services</span>
+                                    <span class="text-gray-700 amharic-only amharic-text">ክህሎትን በአገልግሎት ተለዋዋጭ</span>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-arrow-right text-white text-sm"></i>
+                                    </div>
+                                    <span class="text-gray-700 english-only">Scaling business with opportunities</span>
+                                    <span class="text-gray-700 amharic-only amharic-text">ቢዝነስን በአጋጣሚዎች እያሳደጠች ነው</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-16 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="stats-card rounded-2xl p-6 text-center">
+                    <div class="text-3xl font-bold text-pink-600 mb-2" data-count="1500">0</div>
+                    <div class="text-gray-600 font-medium english-only">Active Members</div>
+                    <div class="text-gray-600 font-medium amharic-only amharic-text">የአባላት ብዛት</div>
+                </div>
+                <div class="stats-card rounded-2xl p-6 text-center">
+                    <div class="text-3xl font-bold text-purple-600 mb-2" data-count="50">0</div>
+                    <div class="text-gray-600 font-medium english-only">Expert Mentors</div>
+                    <div class="text-gray-600 font-medium amharic-only amharic-text">የሙያ አስተማሪዎች</div>
+                </div>
+                <div class="stats-card rounded-2xl p-6 text-center">
+                    <div class="text-3xl font-bold text-blue-600 mb-2" data-count="300">0</div>
+                    <div class="text-gray-600 font-medium english-only">Success Stories</div>
+                    <div class="text-gray-600 font-medium amharic-only amharic-text">የተሳኩ ታሪኮች</div>
+                </div>
+                <div class="stats-card rounded-2xl p-6 text-center">
+                    <div class="text-3xl font-bold text-green-600 mb-2" data-count="85">0</div>
+                    <div class="text-gray-600 font-medium english-only">Success Rate %</div>
+                    <div class="text-gray-600 font-medium amharic-only amharic-text">የተሳካ መጠን %</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-20 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4 english-only">Everything You Need to Succeed</h2>
+                <h2 class="text-4xl font-bold text-gray-800 mb-4 amharic-only amharic-text">ለመሳካት የሚያስፈልጉት ነገሮች</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto english-only">
+                    Our platform combines sisterhood support, AI-powered mentorship, skill exchange, and opportunity discovery 
+                    to create a comprehensive ecosystem for Ethiopian women entrepreneurs.
+                </p>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto amharic-only amharic-text">
+                    መድረካችን እህትነት ድጋፍን፣ የኤአይ ኃይል ያለው አስተማሪነትን፣ ክህሎት ልውውጥን እና አጋጣሚ ፍለጋን ያቀናጀ ሙሉ ለሙሉ የተዘጋጀ ስርዓት ነው።
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Sisterhood Forums -->
+                <div class="feature-card rounded-2xl p-8">
+                    <div class="w-16 h-16 bg-gradient-to-r from-pink-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-users text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 english-only">Sisterhood Forums</h3>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 amharic-only amharic-text">እህትነት መድረኮች</h3>
+                    <p class="text-gray-600 mb-6 english-only">
+                        Safe, moderated discussion spaces where you can share experiences anonymously, 
+                        find peer support, and connect with other solo entrepreneurs who understand your journey.
+                    </p>
+                    <p class="text-gray-600 mb-6 amharic-only amharic-text">
+                        ደህና የተከታተሉ የውይይት ቦታዎች፣ በብቸት መጋራት ይችላሉ፣ የእርስዎን ጉዞ የሚረዱ ሌሎች ብቸኛ ፈጣኖችን ያግኙ።
+                    </p>
+                    <div class="space-y-2 mb-6">
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-shield-alt text-green-500 mr-2"></i>
+                            <span class="english-only">Anonymous participation as "Sister [Your Name]"</span>
+                            <span class="amharic-only amharic-text">እንደ "እህት [ስምዎ]" ብቸት ተሳትፎ</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-heart text-pink-500 mr-2"></i>
+                            <span class="english-only">Daily Sister Boost affirmations</span>
+                            <span class="amharic-only amharic-text">የዕለቱ እህት ማጎሪያ</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-handshake text-blue-500 mr-2"></i>
+                            <span class="english-only">Peer Buddy System matching</span>
+                            <span class="amharic-only amharic-text">የእህት ጓደኛ ማጋጠሚያ ስርዓት</span>
+                        </div>
+                    </div>
+                    <a href="forums.html" class="text-pink-600 font-medium hover:text-pink-700 transition-colors">
+                        <span class="english-only">Join Discussions <i class="fas fa-arrow-right ml-1"></i></span>
+                        <span class="amharic-only amharic-text">መድረኮችን ይቀላቀሉ <i class="fas fa-arrow-right ml-1"></i></span>
+                    </a>
+                </div>
+
+                <!-- AI Mentorship Engine -->
+                <div class="feature-card rounded-2xl p-8">
+                    <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-robot text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 english-only">AI Mentorship Engine</h3>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 amharic-only amharic-text">የኤአይ አስተማሪ ፍርሃት</h3>
+                    <p class="text-gray-600 mb-6 english-only">
+                        Get matched with experienced Ethiopian mentors (both women and men) who understand 
+                        building businesses without family support. AI-powered personalization learns your goals.
+                    </p>
+                    <p class="text-gray-600 mb-6 amharic-only amharic-text">
+                        ከቤተሰብ ድጋፍ ውጭ ቢዝነስ ማቋቋምን የሚረዱ ተሞክሮ ያላቸው ኢትዮጵያውያን አስተማሪዎችን (ሴቶችና ወንዶች) ያግኙ። የኤአይ ኃይል ያለው የግል ማደግ ያስተምራል።
+                    </p>
+                    <div class="space-y-2 mb-6">
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-brain text-purple-500 mr-2"></i>
+                            <span class="english-only">AI-powered mentor matching</span>
+                            <span class="amharic-only amharic-text">የኤአይ ኃይል ያለው አስተማሪ ማጋጠሚያ</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-male-female text-blue-500 mr-2"></i>
+                            <span class="english-only">Gender-inclusive mentorship</span>
+                            <span class="amharic-only amharic-text">የጾታ አካባቢ የሚያካትት አስተማሪነት</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-coffee text-green-500 mr-2"></i>
+                            <span class="english-only">Virtual coffee scheduling</span>
+                            <span class="amharic-only amharic-text">የቪርቻል ቡና ማስያዣ</span>
+                        </div>
+                    </div>
+                    <a href="mentorship.html" class="text-pink-600 font-medium hover:text-pink-700 transition-colors">
+                        <span class="english-only">Find Your Mentor <i class="fas fa-arrow-right ml-1"></i></span>
+                        <span class="amharic-only amharic-text">አስተማሪዎን ያግኙ <i class="fas fa-arrow-right ml-1"></i></span>
+                    </a>
+                </div>
+
+                <!-- Skill Exchange Hub -->
+                <div class="feature-card rounded-2xl p-8">
+                    <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-teal-600 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-exchange-alt text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 english-only">Skill Exchange Hub</h3>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 amharic-only amharic-text">የክህሎት ልውውጥ ማዕከል</h3>
+                    <p class="text-gray-600 mb-6 english-only">
+                        Monetize your talents through skill trading. Exchange your skills for products, 
+                        services, or bartering with other women entrepreneurs in Ethiopia.
+                    </p>
+                    <p class="text-gray-600 mb-6 amharic-only amharic-text">
+                        ክህሎትዎን በክህሎት ንግድ ያስገቡ። ክህሎትዎን ለምርቶች፣ አገልግሎቶች ወይም በኢትዮጵያ ውስጥ ሌሎች ሴት ፈጣኖች ጋር ተለዋዋጭ።
+                    </p>
+                    <div class="space-y-2 mb-6">
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-briefcase text-orange-500 mr-2"></i>
+                            <span class="english-only">Professional skill portfolio</span>
+                            <span class="amharic-only amharic-text">የሙያ ክህሎት ፖርትፎሊዮ</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-handshake text-blue-500 mr-2"></i>
+                            <span class="english-only">Smart AI skill matching</span>
+                            <span class="amharic-only amharic-text">የኤአይ ኃይል ያለው ክህሎት ማጋጠሚያ</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-star text-yellow-500 mr-2"></i>
+                            <span class="english-only">Trust building with reviews</span>
+                            <span class="amharic-only amharic-text">በግምገማዎች የታመነ ግንባታ</span>
+                        </div>
+                    </div>
+                    <a href="#" class="text-pink-600 font-medium hover:text-pink-700 transition-colors">
+                        <span class="english-only">Explore Skills <i class="fas fa-arrow-right ml-1"></i></span>
+                        <span class="amharic-only amharic-text">ክህሎቶችን ያስሱ <i class="fas fa-arrow-right ml-1"></i></span>
+                    </a>
+                </div>
+
+                <!-- AI-Powered Opportunity Gateway -->
+                <div class="feature-card rounded-2xl p-8">
+                    <div class="w-16 h-16 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-bullseye text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 english-only">Opportunity Gateway</h3>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 amharic-only amharic-text">የአጋጣሚ በር</h3>
+                    <p class="text-gray-600 mb-6 english-only">
+                        Your personal scout continuously fetches local and international opportunities 
+                        matched to your skills and goals. Never miss a grant, competition, or program.
+                    </p>
+                    <p class="text-gray-600 mb-6 amharic-only amharic-text">
+                        የግል ተዋጊዎ ከአካባቢ እና ከአለም አቀፍ አጋጣሚዎች ጋር በተመሳሳይ ክህሎት እና ግቦች የሚመሳሰሉትን ያመጣል።
+                    </p>
+                    <div class="space-y-2 mb-6">
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-search text-purple-500 mr-2"></i>
+                            <span class="english-only">Continuous opportunity fetching</span>
+                            <span class="amharic-only amharic-text">የቀጥታ አጋጣሚ ፍለጋ</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-bell text-red-500 mr-2"></i>
+                            <span class="english-only">Smart deadline notifications</span>
+                            <span class="amharic-only amharic-text">የማስታወቂያ ቀናት</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-file-alt text-blue-500 mr-2"></i>
+                            <span class="english-only">AI application assistance</span>
+                            <span class="amharic-only amharic-text">የኤአይ ማመልከቻ እርዳታ</span>
+                        </div>
+                    </div>
+                    <a href="opportunities.html" class="text-pink-600 font-medium hover:text-pink-700 transition-colors">
+                        <span class="english-only">Discover Opportunities <i class="fas fa-arrow-right ml-1"></i></span>
+                        <span class="amharic-only amharic-text">አጋጣሚዎችን ያግኙ <i class="fas fa-arrow-right ml-1"></i></span>
+                    </a>
+                </div>
+
+                <!-- Learning Resources -->
+                <div class="feature-card rounded-2xl p-8">
+                    <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-graduation-cap text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 english-only">Learning Resources</h3>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 amharic-only amharic-text">የመማር ምንጮች</h3>
+                    <p class="text-gray-600 mb-6 english-only">
+                        Personalized learning dashboard with courses tailored for the Ethiopian market. 
+                        Track progress, earn certificates, and celebrate milestones with your peers.
+                    </p>
+                    <p class="text-gray-600 mb-6 amharic-only amharic-text">
+                        ለኢትዮጵያ ገበያ የተዘጋጀ ኮርሶች ያሉት የግል የመማር ፓነል። እድገትን ያስከትቡ፣ ሰርቲፊኬቶችን ያግኙ፣ ከጓደኞች ጋር ያከብሩ።
+                    </p>
+                    <div class="space-y-2 mb-6">
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-chart-line text-green-500 mr-2"></i>
+                            <span class="english-only">Personalized learning dashboard</span>
+                            <span class="amharic-only amharic-text">የግል የመማር ፓነል</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-certificate text-yellow-500 mr-2"></i>
+                            <span class="english-only">Certificate programs</span>
+                            <span class="amharic-only amharic-text">የሰርቲፊኬት ፕሮግራሞች</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-trophy text-orange-500 mr-2"></i>
+                            <span class="english-only">Progress celebrations</span>
+                            <span class="amharic-only amharic-text">የእድገት አከባበር</span>
+                        </div>
+                    </div>
+                    <a href="#" class="text-pink-600 font-medium hover:text-pink-700 transition-colors">
+                        <span class="english-only">Start Learning <i class="fas fa-arrow-right ml-1"></i></span>
+                        <span class="amharic-only amharic-text">መማር ይጀምሩ <i class="fas fa-arrow-right ml-1"></i></span>
+                    </a>
+                </div>
+
+                <!-- Success Stories -->
+                <div class="feature-card rounded-2xl p-8">
+                    <div class="w-16 h-16 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-trophy text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 english-only">Success Stories</h3>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 amharic-only amharic-text">የተሳኩ ታሪኮች</h3>
+                    <p class="text-gray-600 mb-6 english-only">
+                        Get inspired by real stories from Ethiopian women who transformed their lives 
+                        through entrepreneurship. Learn from their challenges and victories.
+                    </p>
+                    <p class="text-gray-600 mb-6 amharic-only amharic-text">
+                        በፈጣንነት ሕይወታቸውን የቀየሩ ኢትዮጵያዊ ሴቶች እውነተኛ ታሪኮችን ያዳምጡ። ከችግኖቻቸው እና ከአሸናፊነቶቻቸው ይማሩ።
+                    </p>
+                    <div class="space-y-2 mb-6">
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-star text-yellow-500 mr-2"></i>
+                            <span class="english-only">Real transformation stories</span>
+                            <span class="amharic-only amharic-text">የእውነት ተለዋዋጭ ታሪኮች</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-lightbulb text-orange-500 mr-2"></i>
+                            <span class="english-only">Practical lessons learned</span>
+                            <span class="amharic-only amharic-text">የተማሩ የተግባር ትምህርቶች</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-heart text-red-500 mr-2"></i>
+                            <span class="english-only">Community celebrations</span>
+                            <span class="amharic-only amharic-text">የማህበረሰብ አከባበር</span>
+                        </div>
+                    </div>
+                    <a href="#" class="text-pink-600 font-medium hover:text-pink-700 transition-colors">
+                        <span class="english-only">Read Stories <i class="fas fa-arrow-right ml-1"></i></span>
+                        <span class="amharic-only amharic-text">ታሪኮችን ያንብቡ <i class="fas fa-arrow-right ml-1"></i></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-20 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="bg-white/90 backdrop-blur-md rounded-3xl p-12 shadow-2xl">
+                <h2 class="text-4xl font-bold text-gray-800 mb-6 english-only">Ready to Transform Your Journey?</h2>
+                <h2 class="text-4xl font-bold text-gray-800 mb-6 amharic-only amharic-text">ጉዞዎን ለመቀየር ዝግጁ ናቹ?</h2>
+                <p class="text-xl text-gray-600 mb-8 english-only">
+                    Join thousands of Ethiopian women entrepreneurs who are building successful businesses 
+                    with the support of our comprehensive platform.
+                </p>
+                <p class="text-xl text-gray-600 mb-8 amharic-only amharic-text">
+                    ከመድረካችን ድጋፍ ጋር ተሳካ ቢዝነስ የሚያቋቁሙ ኢትዮጵያዊ ሴቶች ፈጣኖችን ይቀላቀሉ።
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="authentication.html" class="cta-button text-white px-8 py-4 rounded-lg font-medium text-lg inline-flex items-center justify-center">
+                        <span class="english-only"><i class="fas fa-user-plus mr-2"></i>Start Your Journey</span>
+                        <span class="amharic-only amharic-text"><i class="fas fa-user-plus mr-2"></i>ጉዞዎን ይጀምሩ</span>
+                    </a>
+                    <a href="forums.html" class="border-2 border-pink-500 text-pink-600 px-8 py-4 rounded-lg font-medium text-lg hover:bg-pink-50 transition-colors inline-flex items-center justify-center">
+                        <span class="english-only"><i class="fas fa-comments mr-2"></i>Join Discussions</span>
+                        <span class="amharic-only amharic-text"><i class="fas fa-comments mr-2"></i>መድረኮችን ይቀላቀሉ</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav fixed bottom-0 left-0 right-0 z-50 md:hidden">
+        <div class="flex justify-around items-center py-3">
+            <a href="index.html" class="nav-item active flex flex-col items-center space-y-1 px-3">
+                <i class="fas fa-home text-xl"></i>
+                <span class="text-xs font-medium english-only">Home</span>
+                <span class="text-xs font-medium amharic-only amharic-text">ዋና</span>
+            </a>
+            <a href="forums.html" class="nav-item flex flex-col items-center space-y-1 px-3">
+                <i class="fas fa-comments text-xl"></i>
+                <span class="text-xs font-medium english-only">Forums</span>
+                <span class="text-xs font-medium amharic-only amharic-text">መድረኮች</span>
+            </a>
+            <a href="mentorship.html" class="nav-item flex flex-col items-center space-y-1 px-3">
+                <i class="fas fa-users text-xl"></i>
+                <span class="text-xs font-medium english-only">Mentors</span>
+                <span class="text-xs font-medium amharic-only amharic-text">አስተማሪዎች</span>
+            </a>
+            <a href="opportunities.html" class="nav-item flex flex-col items-center space-y-1 px-3">
+                <i class="fas fa-bullseye text-xl"></i>
+                <span class="text-xs font-medium english-only">Opportunities</span>
+                <span class="text-xs font-medium amharic-only amharic-text">አጋጣሚዎች</span>
+            </a>
+            <a href="authentication.html" class="nav-item flex flex-col items-center space-y-1 px-3">
+                <i class="fas fa-user-plus text-xl"></i>
+                <span class="text-xs font-medium english-only">Join</span>
+                <span class="text-xs font-medium amharic-only amharic-text">ተቀላቀሉ</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Footer -->
+    <footer class="bg-white/80 backdrop-blur-md border-t border-pink-100 py-8 mb-16 md:mb-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-gray-600 english-only">&copy; 2024 EhtAlem Platform. Empowering Ethiopian women entrepreneurs.</p>
+            <p class="text-gray-600 amharic-only amharic-text">&copy; 2024 እህት አለም መድረክ። ኢትዮጵያዊ ሴቶች ፈጣኖችን ማብቃት።</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Language toggle functionality
+            const languageToggle = document.getElementById('languageToggle');
+            const mobileLanguageToggle = document.getElementById('mobileLanguageToggle');
+            const html = document.documentElement;
+            
+            function toggleLanguage() {
+                const currentLang = html.getAttribute('data-lang');
+                const newLang = currentLang === 'en' ? 'am' : 'en';
+                html.setAttribute('data-lang', newLang);
+                
+                // Update typewriter text based on language
+                if (newLang === 'am') {
+                    if (window.typedInstance) {
+                        window.typedInstance.destroy();
+                    }
+                    window.typedInstance = new Typed('#typewriter-text', {
+                        strings: ['ፈጣኖች', 'ሀሳቦች', 'መሪዎች', 'ውጤት ሰጪዎች'],
+                        typeSpeed: 100,
+                        backSpeed: 50,
+                        backDelay: 2000,
+                        loop: true,
+                        showCursor: true,
+                        cursorChar: '|'
+                    });
+                } else {
+                    if (window.typedInstance) {
+                        window.typedInstance.destroy();
+                    }
+                    window.typedInstance = new Typed('#typewriter-text', {
+                        strings: ['Entrepreneurs', 'Dreamers', 'Leaders', 'Change Makers'],
+                        typeSpeed: 100,
+                        backSpeed: 50,
+                        backDelay: 2000,
+                        loop: true,
+                        showCursor: true,
+                        cursorChar: '|'
+                    });
+                }
+            }
+            
+            languageToggle.addEventListener('click', toggleLanguage);
+            mobileLanguageToggle.addEventListener('click', toggleLanguage);
+            
+            // Initialize typewriter effect
+            window.typedInstance = new Typed('#typewriter-text', {
+                strings: ['Entrepreneurs', 'Dreamers', 'Leaders', 'Change Makers'],
+                typeSpeed: 100,
+                backSpeed: 50,
+                backDelay: 2000,
+                loop: true,
+                showCursor: true,
+                cursorChar: '|'
+            });
+
+            // Counter animation
+            const counters = document.querySelectorAll('[data-count]');
+            const animateCounters = () => {
+                counters.forEach(counter => {
+                    const target = parseInt(counter.dataset.count);
+                    const duration = 2000;
+                    const increment = target / (duration / 16);
+                    let current = 0;
+                    
+                    const updateCounter = () => {
+                        current += increment;
+                        if (current < target) {
+                            counter.textContent = Math.floor(current);
+                            requestAnimationFrame(updateCounter);
+                        } else {
+                            counter.textContent = target + (counter.dataset.count === '85' ? '%' : '+');
+                        }
+                    };
+                    
+                    updateCounter();
+                });
+            };
+
+            // Intersection Observer for counter animation
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounters();
+                        observer.unobserve(entry.target);
+                    }
+                });
+            });
+
+            counters.forEach(counter => {
+                observer.observe(counter);
+            });
+
+            // Feature cards animation
+            anime({
+                targets: '.feature-card',
+                opacity: [0, 1],
+                translateY: [50, 0],
+                duration: 800,
+                delay: anime.stagger(200),
+                easing: 'easeOutQuad'
+            });
+
+            // Floating animation for hero element
+            anime({
+                targets: '.floating-element',
+                translateY: [-10, 10],
+                duration: 3000,
+                direction: 'alternate',
+                loop: true,
+                easing: 'easeInOutSine'
+            });
+
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            mobileMenuBtn.addEventListener('click', function() {
+                alert('Mobile menu - Navigate using the bottom tabs');
+            });
+        });
+    </script>
+</body>
+</html>

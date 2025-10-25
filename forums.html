@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EhtAlem - Discussion Forums</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 50%, #f3e8ff 100%);
+            min-height: 100vh;
+        }
+        .forum-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        .forum-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(236, 72, 153, 0.1);
+        }
+        .category-tab {
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        .category-tab.active {
+            border-bottom-color: #ec4899;
+            color: #ec4899;
+            background-color: #fdf2f8;
+        }
+        .post-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+            border-left: 4px solid #ec4899;
+            transition: all 0.3s ease;
+        }
+        .post-card:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateX(4px);
+        }
+        .anonymous-avatar {
+            background: linear-gradient(45deg, #ec4899, #a855f7);
+        }
+        .create-post-modal {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+        }
+        .floating-action-btn {
+            background: linear-gradient(45deg, #ec4899, #a855f7);
+            box-shadow: 0 4px 20px rgba(236, 72, 153, 0.3);
+            transition: all 0.3s ease;
+        }
+        .floating-action-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(236, 72, 153, 0.4);
+        }
+        .safe-space-badge {
+            background: linear-gradient(45deg, #10b981, #059669);
+        }
+        .language-btn {
+            background: linear-gradient(45deg, #10b981, #059669);
+            transition: all 0.3s ease;
+        }
+        .language-btn:hover {
+            transform: scale(1.05);
+        }
+        .amharic-text {
+            font-family: 'Noto Sans Ethiopic', sans-serif;
+        }
+        [data-lang="am"] .amharic-only {
+            display: block;
+        }
+        [data-lang="am"] .english-only {
+            display: none;
+        }
+        [data-lang="en"] .amharic-only {
+            display: none;
+        }
+        [data-lang="en"] .english-only {
+            display: block;
+        }
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="bg-white/80 backdrop-blur-md border-b border-pink-100 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full flex items-center justify-center">
+                        <span class="text-white font-bold text-sm">E</span>
+                    </div>
+                    <span class="text-xl font-bold text-gray-800">EhtAlem</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="index.html" class="text-gray-600 hover:text-pink-600 transition-colors english-only">Home</a>
+                    <a href="index.html" class="text-gray-600 hover:text-pink-600 transition-colors amharic-only amharic-text">ዋና ገፅ</a>
+                    
+                    <a href="forums.html" class="text-pink-600 font-medium english-only">Forums</a>
+                    <a href="forums.html" class="text-pink-600 font-medium amharic-only amharic-text">መድረኮች</a>
+                    
+                    <a href="mentorship.html" class="text-gray-600 hover:text-pink-600 transition-colors english-only">Mentors</a>
+                    <a href="mentorship.html" class="text-gray-600 hover:text-pink-600 transition-colors amharic-only amharic-text">አስተማሪዎች</a>
+                    
+                    <a href="opportunities.html" class="text-gray-600 hover:text-pink-600 transition-colors english-only">Opportunities</a>
+                    <a href="opportunities.html" class="text-gray-600 hover:text-pink-600 transition-colors amharic-only amharic-text">አጋጣሚዎች</a>
+                    
+                    <button id="languageToggle" class="language-btn text-white px-4 py-2 rounded-lg font-medium">
+                        <span class="english-only">አማርኛ</span>
+                        <span class="amharic-only amharic-text">English</span>
+                    </button>
+                    
+                    <div class="w-8 h-8 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full flex items-center justify-center">
+                        <img src="https://kimi-web-img.moonshot.cn/img/borgenproject.org/7785bb8949f2a73a19004f34554f21012b9cfbfe.jpg" alt="User" class="user-avatar">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800 mb-4 english-only">Discussion Forums</h1>
+            <h1 class="text-4xl font-bold text-gray-800 mb-4 amharic-only amharic-text">የውይይት መድረኮች</h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-6 english-only">
+                A safe space for Ethiopian women entrepreneurs to connect, share experiences, and support each other's journeys.
+            </p>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-6 amharic-only amharic-text">
+                ኢትዮጵያዊ ሴቶች ፈጣኖች ለመገናኘት፣ ልምዶችን ለመጋራት እና የአንድ ሌላን ጉዞ ለመደገፍ ደህና ቦታ።
+            </p>
+            <div class="flex justify-center">
+                <div class="safe-space-badge text-white px-4 py-2 rounded-full text-sm font-medium flex items-center english-only">
+                    <i class="fas fa-shield-alt mr-2"></i>Safe & Moderated Space
+                </div>
+                <div class="safe-space-badge text-white px-4 py-2 rounded-full text-sm font-medium flex items-center amharic-only amharic-text">
+                    <i class="fas fa-shield-alt mr-2"></i>ደህና እና የተከታተለ ቦታ
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Tabs -->
+        <div class="bg-white/80 backdrop-blur-md rounded-t-xl border-b border-gray-200 sticky top-16 z-40">
+            <div class="flex overflow-x-auto">
+                <button class="category-tab px-6 py-4 font-medium text-sm whitespace-nowrap active english-only" data-category="all">
+                    <i class="fas fa-comments mr-2"></i>All Discussions
+                </button>
+                <button class="category-tab px-6 py-4 font-medium text-sm whitespace-nowrap active amharic-only amharic-text" data-category="all">
+                    <i class="fas fa-comments mr-2"></i>ሁሉም ውይይቶች
+                </button>
+                
+                <button class="category-tab px-6 py-4 font-medium text-sm whitespace-nowrap english-only" data-category="entrepreneurship">
+                    <i class="fas fa-rocket mr-2"></i>Entrepreneurship
+                </button>
+                <button class="category-tab px-6 py-4 font-medium text-sm whitespace-nowrap amharic-only amharic-text" data-category="entrepreneurship">
+                    <i class="fas fa-rocket mr-2"></i>ፈጣንነት
+                </button>
+                
+                <button class="category-tab px-6 py-4 font-medium text-sm whitespace-nowrap english-only" data-category="solo-entrepreneurs">
+                    <i class="fas fa-user-tie mr-2"></i>Solo Entrepreneurs
+                </button>
+                <button class="category-tab px-6 py-4 font-medium text-sm whitespace-nowrap amharic-only amharic-text" data-category="solo-entrepreneurs">
+                    <i class="fas fa-user-tie mr-2"></i>ብቸኛ ፈጣኖች
+                </button>
+                
+                <button class="category-tab px-6 py-4 font-medium text-sm whitespace-nowrap english-only" data-category="mental-health">
+                    <i class="fas fa-heart mr-2"></i>Mental Health & Self-Care
+                </button>
+                <button class="category-tab px-6 py-4 font-medium text-sm whitespace-nowrap amharic-only amharic-text" data-category="mental-health">
+                    <i class="fas fa-heart mr-2"></i>የአእምሮ ጤና እና የ自身 እንክብካቤ
+                </button>
+                
+                <button class="category-tab px-6 py-4 font-medium text-sm whitespace-nowrap english-only" data-category="skill-sharing">
+                    <i class="fas fa-exchange-alt mr-2"></i>Skill Sharing
+                </button>
+                <button class="category-tab px-6 py-4 font-medium text-sm whitespace-nowrap amharic-only amharic-text" data-category="skill-sharing">
+                    <i class="fas fa-exchange-alt mr-2"></i>ክህሎት ልውውጥ
+                </button>
+                
+                <button class="category-tab px-6 py-4 font-medium text-sm whitespace-nowrap english-only" data-category="success-stories">
+                    <i class="fas fa-trophy mr-2"></i>Success Stories
+                </button>
+                <button class="category-tab px-6 py-4 font-medium text-sm whitespace-nowrap amharic-only amharic-text" data-category="success-stories">
+                    <i class="fas fa-trophy mr-2"></i>የተሳኩ ታሪኮች
+                </button>
+                
+                <button class="category-tab px-6 py-4 font-medium text-sm whitespace-nowrap english-only" data-category="challenges">
+                    <i class="fas fa-hand-holding-heart mr-2"></i>Challenges & Support
+                </button>
+                <button class="category-tab px-6 py-4 font-medium text-sm whitespace-nowrap amharic-only amharic-text" data-category="challenges">
+                    <i class="fas fa-hand-holding-heart mr-2"></i>ችግኖች እና ድጋፍ
+                </button>
+            </div>
+        </div>
+
+        <!-- Forum Content -->
+        <div class="bg-white/60 backdrop-blur-md rounded-b-xl shadow-lg">
+            <!-- Search and Filter -->
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <div class="flex-1">
+                        <div class="relative">
+                            <input type="text" id="searchInput" placeholder="Search discussions..." class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent english-only">
+                            <input type="text" id="searchInputAmharic" placeholder="ውይይቶችን ይፈልጉ..." class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent amharic-only amharic-text">
+                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <select id="sortBy" class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent english-only">
+                            <option value="recent">Most Recent</option>
+                            <option value="popular">Most Popular</option>
+                            <option value="trending">Trending</option>
+                            <option value="most-replies">Most Replies</option>
+                        </select>
+                        <select id="sortByAmharic" class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent amharic-only amharic-text">
+                            <option value="recent">አዲስ</option>
+                            <option value="popular">ታዋቂ</option>
+                            <option value="trending">የታወቀ</option>
+                            <option value="most-replies">ብዙ ምላሾች</option>
+                        </select>
+                        <button id="filterBtn" class="px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors english-only">
+                            <i class="fas fa-filter mr-2"></i>Filter
+                        </button>
+                        <button id="filterBtnAmharic" class="px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors amharic-only amharic-text">
+                            <i class="fas fa-filter mr-2"></i>ማጣሪያ
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Discussion Posts -->
+            <div class="p-6">
+                <div id="postsContainer" class="space-y-4">
+                    <!-- Sample Posts -->
+                    <div class="post-card rounded-lg p-6 shadow-sm" data-category="solo-entrepreneurs">
+                        <div class="flex items-start space-x-4">
+                            <img src="https://kimi-web-img.moonshot.cn/img/borgenproject.org/7785bb8949f2a73a19004f34554f21012b9cfbfe.jpg" alt="Sister Selam" class="user-avatar">
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-2 mb-2">
+                                    <span class="font-medium text-gray-800 english-only">Sister Selam</span>
+                                    <span class="font-medium text-gray-800 amharic-only amharic-text">እህት ሴላም</span>
+                                    <span class="text-xs bg-pink-100 text-pink-800 px-2 py-1 rounded-full english-only">Anonymous</span>
+                                    <span class="text-xs bg-pink-100 text-pink-800 px-2 py-1 rounded-full amharic-only amharic-text">ብቸት</span>
+                                    <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full english-only">Solo Entrepreneur</span>
+                                    <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full amharic-only amharic-text">ብቸኛ ፈጣን</span>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2 english-only">Starting a business without family support - How do you stay motivated?</h3>
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2 amharic-only amharic-text">ከቤተሰብ ድጋፍ ውጭ ቢዝነስ ማስጀመር - እንዴት ተነሳሽነትን ያቆማሉ?</h3>
+                                <p class="text-gray-600 mb-3 english-only">
+                                    I've been trying to start my small business for months, but without family support, it feels incredibly isolating. Some days I wonder if I'm making the right choice. How do other solo entrepreneurs stay motivated when everything feels overwhelming?
+                                </p>
+                                <p class="text-gray-600 mb-3 amharic-only amharic-text">
+                                    ለአንድ ወር ቢዝነሴን ለመጀመር እየሞከርኩ ነው፣ ነገር ግን ከቤተሰብ ድጋፍ ውጭ እጅግ ብቸኛ ይሆናል። አንዳንድ ቀናት ትክክለኛውን ምርጫ እያደረግሁ ነኝ ብዬ እጠራጠራለሁ። ሌሎች ብቸኛ ፈጣኖች ሁሉም ነገር የሚያስፈልግበት ጊዜ እንዴት ተነሳሽነትን ያቆማሉ?
+                                </p>
+                                <div class="flex items-center space-x-4 text-sm text-gray-500 mb-3">
+                                    <span class="english-only"><i class="fas fa-clock mr-1"></i>2 hours ago</span>
+                                    <span class="amharic-only amharic-text"><i class="fas fa-clock mr-1"></i>ከ2 ሰዓት በፊት</span>
+                                    <span class="english-only"><i class="fas fa-comment mr-1"></i>23 replies</span>
+                                    <span class="amharic-only amharic-text"><i class="fas fa-comment mr-1"></i>23 ምላሾች</span>
+                                    <span class="english-only"><i class="fas fa-heart mr-1"></i>45 likes</span>
+                                    <span class="amharic-only amharic-text"><i class="fas fa-heart mr-1"></i>45 መደሰት</span>
+                                    <span class="english-only"><i class="fas fa-eye mr-1"></i>156 views</span>
+                                    <span class="amharic-only amharic-text"><i class="fas fa-eye mr-1"></i>156 እይታዎች</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="post-card rounded-lg p-6 shadow-sm" data-category="mental-health">
+                        <div class="flex items-start space-x-4">
+                            <img src="https://kimi-web-img.moonshot.cn/img/africa.unwomen.org/3a21a30220eed3bb16a99cb5a833f6d2a0c5971c.webp" alt="Sister Makeda" class="user-avatar">
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-2 mb-2">
+                                    <span class="font-medium text-gray-800 english-only">Sister Makeda</span>
+                                    <span class="font-medium text-gray-800 amharic-only amharic-text">እህት ማኬዳ</span>
+                                    <span class="text-xs bg-pink-100 text-pink-800 px-2 py-1 rounded-full english-only">Anonymous</span>
+                                    <span class="text-xs bg-pink-100 text-pink-800 px-2 py-1 rounded-full amharic-only amharic-text">ብቸት</span>
+                                    <span class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full english-only">Mental Health</span>
+                                    <span class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full amharic-only amharic-text">የአእምሮ ጤና</span>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2 english-only">Dealing with imposter syndrome as a woman entrepreneur</h3>
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2 amharic-only amharic-text">እንደ ሴት ፈጣን የማይመችነት ስንድሮም መጋፈጥ</h3>
+                                <p class="text-gray-600 mb-3 english-only">
+                                    I often feel like I'm not "qualified enough" or "experienced enough" to run my business, even though I've been successfully operating for two years. Does anyone else struggle with these feelings? What strategies have helped you overcome imposter syndrome?
+                                </p>
+                                <p class="text-gray-600 mb-3 amharic-only amharic-text">
+                                    ብዙ ጊዜ "በቂ ብቃት የለኝም" ወይም "በቂ ተሞክሮ የለኝም" ብዬ አስተውላለሁ፣ ነገር ግን ለ2 ዓመታት በተሳካ ሁኔታ እየተያዘኩ ነው። ሌሎችም ከእነዚህ ስሜቶች ጋር ይታገላሉን? የማይመችነት ስንድሮምን ማሸነፍ ምን ስትራቴጂዎች ይረዳሉ?
+                                </p>
+                                <div class="flex items-center space-x-4 text-sm text-gray-500 mb-3">
+                                    <span class="english-only"><i class="fas fa-clock mr-1"></i>5 hours ago</span>
+                                    <span class="amharic-only amharic-text"><i class="fas fa-clock mr-1"></i>ከ5 ሰዓት በፊት</span>
+                                    <span class="english-only"><i class="fas fa-comment mr-1"></i>18 replies</span>
+                                    <span class="amharic-only amharic-text"><i class="fas fa-comment mr-1"></i>18 ምላሾች</span>
+                                    <span class="english-only"><i class="fas fa-heart mr-1"></i>32 likes</span>
+                                    <span class="amharic-only amharic-text"><i class="fas fa-heart mr-1"></i>32 መደሰት</span>
+                                    <span class="english-only"><i class="fas fa-eye mr-1"></i>89 views</span>
+                                    <span class="amharic-only amharic-text"><i class="fas fa-eye mr-1"></i>89 እይታዎች</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="post-card rounded-lg p-6 shadow-sm" data-category="entrepreneurship">
+                        <div class="flex items-start space-x-4">
+                            <img src="https://kimi-web-img.moonshot.cn/img/au.int/251fd9108c8d1556d417bcdcacd0d9e054e27e40.JPG" alt="Sister Almaz" class="user-avatar">
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-2 mb-2">
+                                    <span class="font-medium text-gray-800 english-only">Sister Almaz</span>
+                                    <span class="font-medium text-gray-800 amharic-only amharic-text">እህት አልማዝ</span>
+                                    <span class="text-xs bg-pink-100 text-pink-800 px-2 py-1 rounded-full english-only">Anonymous</span>
+                                    <span class="text-xs bg-pink-100 text-pink-800 px-2 py-1 rounded-full amharic-only amharic-text">ብቸት</span>
+                                    <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full english-only">Business</span>
+                                    <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full amharic-only amharic-text">ቢዝነስ</span>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2 english-only">Best digital payment solutions for small businesses in Ethiopia?</h3>
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2 amharic-only amharic-text">ለኢትዮጵያ ውስጥ ትንንሽ ቢዝነሶች ምንም ዲጂታል ክፍያ መፍትሄዎች ናቸው?</h3>
+                                <p class="text-gray-600 mb-3 english-only">
+                                    I'm looking for reliable and affordable digital payment solutions for my online craft business. What payment systems are you using? Any recommendations for someone just starting out with limited technical knowledge?
+                                </p>
+                                <p class="text-gray-600 mb-3 amharic-only amharic-text">
+                                    ለመስመር ላይ እጅግኛ ቢዝነሴ ተመራጭ እና ተመራጭ የዲጂታል ክፍያ መፍትሄዎችን እየፈለግሁ ነው። የምትጠቀሙት የክፍያ ስርዓቶች ምንድን ናቸው? ለተጀመረ ከተወሰነ ቴክኒክ እውቀት ጋር ምንም ምክሮች አሉ?
+                                </p>
+                                <div class="flex items-center space-x-4 text-sm text-gray-500 mb-3">
+                                    <span class="english-only"><i class="fas fa-clock mr-1"></i>1 day ago</span>
+                                    <span class="amharic-only amharic-text"><i class="fas fa-clock mr-1"></i>ከ1 ቀን በፊት</span>
+                                    <span class="english-only"><i class="fas fa-comment mr-1"></i>31 replies</span>
+                                    <span class="amharic-only amharic-text"><i class="fas fa-comment mr-1"></i>31 ምላሾች</span>
+                                    <span class="english-only"><i class="fas fa-heart mr-1"></i>67 likes</span>
+                                    <span class="amharic-only amharic-text"><i class="fas fa-heart mr-1"></i>67 መደሰት</span>
+                                    <span class="english-only"><i class="fas fa-eye mr-1"></i>234 views</span>
+                                    <span class="amharic-only amharic-text"><i class="fas fa-eye mr-1"></i>234 እይታዎች</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="post-card rounded-lg p-6 shadow-sm" data-category="success-stories">
+                        <div class="flex items-start space-x-4">
+                            <img src="https://kimi-web-img.moonshot.cn/img/omnatigray.org/b30ebac5dee04fc4b9cfa75cff81d31c18ad284b.jpg" alt="Sister Hanna" class="user-avatar">
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-2 mb-2">
+                                    <span class="font-medium text-gray-800 english-only">Sister Hanna</span>
+                                    <span class="font-medium text-gray-800 amharic-only amharic-text">እህት ሃና</span>
+                                    <span class="text-xs bg-pink-100 text-pink-800 px-2 py-1 rounded-full english-only">Anonymous</span>
+                                    <span class="text-xs bg-pink-100 text-pink-800 px-2 py-1 rounded-full amharic-only amharic-text">ብቸት</span>
+                                    <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full english-only">Success Story</span>
+                                    <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full amharic-only amharic-text">የተሳካ ታሪክ</span>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2 english-only">From street vendor to restaurant owner - my 3-year journey</h3>
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2 amharic-only amharic-text">ከመንገድ ሻጭ ወደ ሬስቶራንት ባለቤት - የኔ 3 ዓመት ጉዞ</h3>
+                                <p class="text-gray-600 mb-3 english-only">
+                                    Three years ago, I was selling injera on the streets of Addis. Today, I own a small restaurant with 5 employees. Want to share some lessons I learned along the way and hopefully inspire others who are just starting their entrepreneurial journey.
+                                </p>
+                                <p class="text-gray-600 mb-3 amharic-only amharic-text">
+                                    ከ3 ዓመታት በፊት በአዲስ አበባ መንገዶች上 እንጀራ እየሸጥሁ ነበር። ዛሬ 5 ሰራተኞች ያሉት ትንንሽ ሬስቶራንት አለኝ። በመንገድ ላይ የተማርኩትን አንዳንድ ትምህርቶች ለመጋራት እና ተስፋ ሁኖ ሌሎችን ለማግኘት እፈልጋለሁ።
+                                </p>
+                                <div class="flex items-center space-x-4 text-sm text-gray-500 mb-3">
+                                    <span class="english-only"><i class="fas fa-clock mr-1"></i>2 days ago</span>
+                                    <span class="amharic-only amharic-text"><i class="fas fa-clock mr-1"></i>ከ2 ቀናት በፊት</span>
+                                    <span class="english-only"><i class="fas fa-comment mr-1"></i>47 replies</span>
+                                    <span class="amharic-only amharic-text"><i class="fas fa-comment mr-1"></i>47 ምላሾች</span>
+                                    <span class="english-only"><i class="fas fa-heart mr-1"></i>89 likes</span>
+                                    <span class="amharic-only amharic-text"><i class="fas fa-heart mr-1"></i>89 መደሰት</span>
+                                    <span class="english-only"><i class="fas fa-eye mr-1"></i>456 views</span>
+                                    <span class="amharic-only amharic-text"><i class="fas fa-eye mr-1"></i>456 እይታዎች</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="post-card rounded-lg p-6 shadow-sm" data-category="challenges">
+                        <div class="flex items-start space-x-4">
+                            <img src="https://kimi-web-img.moonshot.cn/img/pbs.twimg.com/57d94e71d83a6336153bfbde86fe6cd3edab95f4.jpg" alt="Sister Tizita" class="user-avatar">
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-2 mb-2">
+                                    <span class="font-medium text-gray-800 english-only">Sister Tizita</span>
+                                    <span class="font-medium text-gray-800 amharic-only amharic-text">እህት ቲዚታ</span>
+                                    <span class="text-xs bg-pink-100 text-pink-800 px-2 py-1 rounded-full english-only">Anonymous</span>
+                                    <span class="text-xs bg-pink-100 text-pink-800 px-2 py-1 rounded-full amharic-only amharic-text">ብቸት</span>
+                                    <span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full english-only">Seeking Support</span>
+                                    <span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full amharic-only amharic-text">ድጋፍ እየፈለገ</span>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2 english-only">How to handle clients who don't pay on time?</h3>
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2 amharic-only amharic-text">የጊዜ ገደብ የማይከተሉ ደንበኞችን እንዴት መደረስ ይቻላል?</h3>
+                                <p class="text-gray-600 mb-3 english-only">
+                                    I run a small graphic design business and I'm struggling with clients who delay payments or don't pay at all. This is affecting my cash flow and ability to grow. How do you handle payment issues while maintaining good client relationships?
+                                </p>
+                                <p class="text-gray-600 mb-3 amharic-only amharic-text">
+                                    ትንንሽ የጥበባት ዲዛይን ቢዝነስ እየተዘጋጀሁ ነው እና ደንበኞች ክፍያን የሚዘገዩ ወይም አያከፍሉም ብዬ እየታገልኩ ነው። ይህ የእኔ የገንዘብ ፍሰት እና እድገት ችልታዎችን ይነካል። ክፍያ ችግኖችን በመልካም የደንበኛ ግንኙነት ማቆየት እንዴት ይደረጋል?
+                                </p>
+                                <div class="flex items-center space-x-4 text-sm text-gray-500 mb-3">
+                                    <span class="english-only"><i class="fas fa-clock mr-1"></i>3 days ago</span>
+                                    <span class="amharic-only amharic-text"><i class="fas fa-clock mr-1"></i>ከ3 ቀናት በፊት</span>
+                                    <span class="english-only"><i class="fas fa-comment mr-1"></i>15 replies</span>
+                                    <span class="amharic-only amharic-text"><i class="fas fa-comment mr-1"></i>15 ምላሾች</span>
+                                    <span class="english-only"><i class="fas fa-heart mr-1"></i>28 likes</span>
+                                    <span class="amharic-only amharic-text"><i class="fas fa-heart mr-1"></i>28 መደሰት</span>
+                                    <span class="english-only"><i class="fas fa-eye mr-1"></i>78 views</span>
+                                    <span class="amharic-only amharic-text"><i class="fas fa-eye mr-1"></i>78 እይታዎች</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="post-card rounded-lg p-6 shadow-sm" data-category="skill-sharing">
+                        <div class="flex items-start space-x-4">
+                            <img src="https://kimi-web-img.moonshot.cn/img/easy-peasy.ai/96b238404835f9c074e689d9d94189b41fcd3057.png" alt="Sister Rahel" class="user-avatar">
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-2 mb-2">
+                                    <span class="font-medium text-gray-800 english-only">Sister Rahel</span>
+                                    <span class="font-medium text-gray-800 amharic-only amharic-text">እህት ራሄል</span>
+                                    <span class="text-xs bg-pink-100 text-pink-800 px-2 py-1 rounded-full english-only">Anonymous</span>
+                                    <span class="text-xs bg-pink-100 text-pink-800 px-2 py-1 rounded-full amharic-only amharic-text">ብቸት</span>
+                                    <span class="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full english-only">Skill Exchange</span>
+                                    <span class="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full amharic-only amharic-text">ክህሎት ልውውጥ</span>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2 english-only">Looking for: Social media marketing skills / Offering: Traditional weaving</h3>
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2 amharic-only amharic-text">ፍለጋ: ማህበራዊ ሚዲያ ግብይት ክህሎቶች / ማቅረብ: ባህላዊ ትራፊክ</h3>
+                                <p class="text-gray-600 mb-3 english-only">
+                                    I need help with social media marketing for my traditional weaving business. In exchange, I can teach traditional Ethiopian weaving techniques or create custom woven items. Anyone interested in this skill exchange?
+                                </p>
+                                <p class="text-gray-600 mb-3 amharic-only amharic-text">
+                                    ለባህላዊ ትራፊክ ቢዝነሴ ማህበራዊ ሚዲያ ግብይት እርዳታ እፈልጋለሁ። በመለዋዋጭ፣ ባህላዊ ኢትዮጵያዊ ትራፊክ ቴክኒኮችን መማር ወይም ብጁ ትራፊክ እቃዎች መፍጠር እችላለሁ። በዚህ ክህሎት ልውውጥ ያገናኛሉን?
+                                </p>
+                                <div class="flex items-center space-x-4 text-sm text-gray-500 mb-3">
+                                    <span class="english-only"><i class="fas fa-clock mr-1"></i>4 days ago</span>
+                                    <span class="amharic-only amharic-text"><i class="fas fa-clock mr-1"></i>ከ4 ቀናት በፊት</span>
+                                    <span class="english-only"><i class="fas fa-comment mr-1"></i>12 replies</span>
+                                    <span class="amharic-only amharic-text"><i class="fas fa-comment mr-1"></i>12 ምላሾች</span>
+                                    <span class="english-only"><i class="fas fa-heart mr-1"></i>34 likes</span>
+                                    <span class="amharic-only amharic-text"><i class="fas fa-heart mr-1"></i>34 መደሰት</span>
+                                    <span class="english-only"><i class="fas fa-eye mr-1"></i>92 views</span>
+                                    <span class="amharic-only amharic-text"><i class="fas fa-eye mr-1"></i>92 እይታዎች</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Load More Button -->
+                <div class="text-center mt-8">
+                    <button id="loadMoreBtn" class="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-8 py-3 rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all transform hover:scale-105 english-only">
+                        Load More Discussions
+                        <i class="fas fa-chevron-down ml-2"></i>
+                    </button>
+                    <button id="loadMoreBtnAmharic" class="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-8 py-3 rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all transform hover:scale-105 amharic-only amharic-text">
+                        የተጨማሪ ውይይቶችን ያመጡ
+                        <i class="fas fa-chevron-down ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <button id="createPostBtn" class="floating-action-btn fixed bottom-20 right-6 w-14 h-14 rounded-full text-white shadow-lg z-40">
+        <i class="fas fa-plus text-xl"></i>
+    </button>
+
+    <!-- Create Post Modal -->
+    <div id="createPostModal" class="create-post-modal fixed inset-0 z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="modal-content rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-2xl font-bold text-gray-800 english-only">Create New Discussion</h2>
+                        <h2 class="text-2xl font-bold text-gray-800 amharic-only amharic-text">አዲስ ውይይት ፍጠር</h2>
+                        <button id="closeModalBtn" class="text-gray-400 hover:text-gray-600 transition-colors">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <form id="createPostForm" class="p-6 space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2 english-only">Discussion Title *</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2 amharic-only amharic-text">የውይይት ርዕስ *</label>
+                        <input type="text" id="postTitle" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent english-only" placeholder="What would you like to discuss?">
+                        <input type="text" id="postTitleAmharic" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent amharic-only amharic-text" placeholder="ምን ማወቅ ትፈልጋላችሁ?">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2 english-only">Category *</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2 amharic-only amharic-text">ምድብ *</label>
+                        <select id="postCategory" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent english-only">
+                            <option value="">Select a category</option>
+                            <option value="entrepreneurship">Entrepreneurship</option>
+                            <option value="solo-entrepreneurs">Solo Entrepreneurs Support Group</option>
+                            <option value="mental-health">Mental Health & Self-Care</option>
+                            <option value="skill-sharing">Skill Sharing & Exchange</option>
+                            <option value="success-stories">Success Stories</option>
+                            <option value="challenges">Challenges & Support</option>
+                        </select>
+                        <select id="postCategoryAmharic" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent amharic-only amharic-text">
+                            <option value="">ምድብ ይምረጡ</option>
+                            <option value="entrepreneurship">ፈጣንነት</option>
+                            <option value="solo-entrepreneurs">የብቸኛ ፈጣኖች ድጋፍ ቡድን</option>
+                            <option value="mental-health">የአእምሮ ጤና እና የ自身 እንክብካቤ</option>
+                            <option value="skill-sharing">ክህሎት ልውውጥ እና ተለዋዋጭ</option>
+                            <option value="success-stories">የተሳኩ ታሪኮች</option>
+                            <option value="challenges">ችግኖች እና ድጋፍ</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2 english-only">Your Message *</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2 amharic-only amharic-text">መልዕክትዎ *</label>
+                        <textarea id="postContent" required rows="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent english-only" placeholder="Share your thoughts, questions, or experiences..."></textarea>
+                        <textarea id="postContentAmharic" required rows="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent amharic-only amharic-text" placeholder="አስተያየቶችዎን፣ ጥያቄዎችን ወይም ልምዶችን ያጋሩ..."></textarea>
+                    </div>
+
+                    <div class="bg-pink-50 border border-pink-200 rounded-lg p-4">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-shield-alt text-pink-600 mr-2"></i>
+                            <span class="font-medium text-pink-800 english-only">Privacy Options</span>
+                            <span class="font-medium text-pink-800 amharic-only amharic-text">የግልነት አማራጮች</span>
+                        </div>
+                        <label class="flex items-center">
+                            <input type="checkbox" id="anonymousPost" checked class="rounded border-gray-300 text-pink-600 focus:ring-pink-500">
+                            <span class="ml-2 text-sm text-gray-700 english-only">Post anonymously as "Sister [Your Name]"</span>
+                            <span class="ml-2 text-sm text-gray-700 amharic-only amharic-text">እንደ "እህት [ስምዎ]" ብቸት ያሳያሉ</span>
+                        </label>
+                        <p class="text-xs text-gray-600 mt-1 english-only">Your identity will be protected and you'll be shown with an anonymous avatar.</p>
+                        <p class="text-xs text-gray-600 mt-1 amharic-only amharic-text">የእርስዎ መንነት ይጠበቃል እና ከብቸት አቫታር ጋር ይታያሉ።</p>
+                    </div>
+
+                    <div class="flex space-x-4">
+                        <button type="button" id="cancelPostBtn" class="flex-1 bg-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium hover:bg-gray-300 transition-colors english-only">
+                            Cancel
+                        </button>
+                        <button type="button" id="cancelPostBtnAmharic" class="flex-1 bg-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium hover:bg-gray-300 transition-colors amharic-only amharic-text">
+                            ተሰርዝ
+                        </button>
+                        <button type="submit" class="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white py-3 px-4 rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all transform hover:scale-105 english-only">
+                            <i class="fas fa-paper-plane mr-2"></i>Post Discussion
+                        </button>
+                        <button type="submit" class="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white py-3 px-4 rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all transform hover:scale-105 amharic-only amharic-text">
+                            <i class="fas fa-paper-plane mr-2"></i>ውይይት ያሳያሉ
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white/80 backdrop-blur-md border-t border-pink-100 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-gray-600 english-only">&copy; 2024 EhtAlem Platform. Empowering Ethiopian women entrepreneurs.</p>
+            <p class="text-gray-600 amharic-only amharic-text">&copy; 2024 እህት አለም መድረክ። ኢትዮጵያዊ ሴቶች ፈጣኖችን ማብቃት።</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Language toggle functionality
+            const languageToggle = document.getElementById('languageToggle');
+            const html = document.documentElement;
+            
+            languageToggle.addEventListener('click', function() {
+                const currentLang = html.getAttribute('data-lang');
+                const newLang = currentLang === 'en' ? 'am' : 'en';
+                html.setAttribute('data-lang', newLang);
+            });
+
+            // Forum functionality
+            const categoryTabs = document.querySelectorAll('.category-tab');
+            const posts = document.querySelectorAll('.post-card');
+            const searchInput = document.getElementById('searchInput');
+            const searchInputAmharic = document.getElementById('searchInputAmharic');
+            const searchBtn = document.getElementById('searchBtn');
+            const searchBtnAmharic = document.getElementById('searchBtnAmharic');
+
+            categoryTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Update active tab
+                    categoryTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const category = this.dataset.category;
+                    filterPosts(category);
+                });
+            });
+
+            searchBtn.addEventListener('click', function() {
+                const searchTerm = searchInput.value.toLowerCase();
+                filterPostsBySearch(searchTerm);
+            });
+
+            searchBtnAmharic.addEventListener('click', function() {
+                const searchTerm = searchInputAmharic.value.toLowerCase();
+                filterPostsBySearch(searchTerm);
+            });
+
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const searchTerm = this.value.toLowerCase();
+                    filterPostsBySearch(searchTerm);
+                }
+            });
+
+            searchInputAmharic.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const searchTerm = this.value.toLowerCase();
+                    filterPostsBySearch(searchTerm);
+                }
+            });
+
+            // Modal functionality
+            const createPostBtn = document.getElementById('createPostBtn');
+            const createPostModal = document.getElementById('createPostModal');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const cancelPostBtn = document.getElementById('cancelPostBtn');
+            const cancelPostBtnAmharic = document.getElementById('cancelPostBtnAmharic');
+
+            createPostBtn.addEventListener('click', () => {
+                createPostModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            });
+
+            function closeModal() {
+                createPostModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+
+            closeModalBtn.addEventListener('click', closeModal);
+            cancelPostBtn.addEventListener('click', closeModal);
+            cancelPostBtnAmharic.addEventListener('click', closeModal);
+
+            // Close modal when clicking outside
+            createPostModal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeModal();
+                }
+            });
+
+            // Form submission
+            const createPostForm = document.getElementById('createPostForm');
+            createPostForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                handlePostCreation();
+            });
+
+            // Load more functionality
+            const loadMoreBtn = document.getElementById('loadMoreBtn');
+            const loadMoreBtnAmharic = document.getElementById('loadMoreBtnAmharic');
+            
+            loadMoreBtn.addEventListener('click', loadMorePosts);
+            loadMoreBtnAmharic.addEventListener('click', loadMorePosts);
+
+            function filterPosts(category) {
+                posts.forEach(post => {
+                    if (category === 'all' || post.dataset.category === category) {
+                        post.style.display = 'block';
+                        anime({
+                            targets: post,
+                            opacity: [0, 1],
+                            translateY: [20, 0],
+                            duration: 300,
+                            easing: 'easeOutQuad'
+                        });
+                    } else {
+                        post.style.display = 'none';
+                    }
+                });
+            }
+
+            function filterPostsBySearch(searchTerm) {
+                posts.forEach(post => {
+                    const title = post.querySelector('h3').textContent.toLowerCase();
+                    const content = post.querySelector('p').textContent.toLowerCase();
+                    
+                    if (title.includes(searchTerm) || content.includes(searchTerm)) {
+                        post.style.display = 'block';
+                    } else {
+                        post.style.display = 'none';
+                    }
+                });
+            }
+
+            function handlePostCreation() {
+                const title = document.getElementById('postTitle').value;
+                const category = document.getElementById('postCategory').value;
+                const content = document.getElementById('postContent').value;
+                
+                const titleAmharic = document.getElementById('postTitleAmharic').value;
+                const categoryAmharic = document.getElementById('postCategoryAmharic').value;
+                const contentAmharic = document.getElementById('postContentAmharic').value;
+                
+                const currentTitle = html.getAttribute('data-lang') === 'am' ? titleAmharic : title;
+                const currentCategory = html.getAttribute('data-lang') === 'am' ? categoryAmharic : category;
+                const currentContent = html.getAttribute('data-lang') === 'am' ? contentAmharic : content;
+
+                if (!currentTitle || !currentCategory || !currentContent) {
+                    alert(html.getAttribute('data-lang') === 'am' ? 'እባክዎ ሁሉንም አስፈላጊ መስኮች ይሙሉ።' : 'Please fill in all required fields.');
+                    return;
+                }
+
+                // Simulate post creation
+                showSuccessMessage();
+                closeModal();
+                resetForm();
+            }
+
+            function showSuccessMessage() {
+                const successDiv = document.createElement('div');
+                successDiv.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+                
+                if (html.getAttribute('data-lang') === 'am') {
+                    successDiv.innerHTML = '<i class="fas fa-check mr-2"></i>ውይይትዎ በተሳካ ሁኔታ ተላከ!';
+                } else {
+                    successDiv.innerHTML = '<i class="fas fa-check mr-2"></i>Your discussion has been posted successfully!';
+                }
+                
+                document.body.appendChild(successDiv);
+
+                setTimeout(() => {
+                    successDiv.remove();
+                }, 3000);
+            }
+
+            function resetForm() {
+                document.getElementById('createPostForm').reset();
+            }
+
+            function loadMorePosts() {
+                const isAmharic = html.getAttribute('data-lang') === 'am';
+                const btn = isAmharic ? document.getElementById('loadMoreBtnAmharic') : document.getElementById('loadMoreBtn');
+                
+                if (isAmharic) {
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>በመጫን ላይ...';
+                } else {
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Loading...';
+                }
+                
+                setTimeout(() => {
+                    if (isAmharic) {
+                        btn.innerHTML = 'የተጨማሪ ውይይቶችን ያመጡ <i class="fas fa-chevron-down ml-2"></i>';
+                    } else {
+                        btn.innerHTML = 'Load More Discussions <i class="fas fa-chevron-down ml-2"></i>';
+                    }
+                }, 1500);
+            }
+
+            // Initialize animations
+            anime({
+                targets: '.post-card',
+                opacity: [0, 1],
+                translateY: [30, 0],
+                duration: 600,
+                delay: anime.stagger(100),
+                easing: 'easeOutQuad'
+            });
+
+            anime({
+                targets: '.floating-action-btn',
+                scale: [0, 1],
+                duration: 800,
+                delay: 1000,
+                easing: 'easeOutElastic(1, .8)'
+            });
+        });
+    </script>
+</body>
+</html>

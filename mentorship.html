@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EhtAlem - AI Mentorship Engine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 50%, #f3e8ff 100%);
+            min-height: 100vh;
+        }
+        .mentor-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        .mentor-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(236, 72, 153, 0.15);
+        }
+        .mentor-avatar {
+            background: linear-gradient(45deg, #ec4899, #a855f7);
+        }
+        .male-mentor-avatar {
+            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
+        }
+        .skill-tag {
+            background: linear-gradient(45deg, #f3f4f6, #e5e7eb);
+            transition: all 0.3s ease;
+        }
+        .skill-tag:hover {
+            background: linear-gradient(45deg, #ec4899, #a855f7);
+            color: white;
+        }
+        .availability-badge {
+            background: linear-gradient(45deg, #10b981, #059669);
+        }
+        .busy-badge {
+            background: linear-gradient(45deg, #ef4444, #dc2626);
+        }
+        .ai-assistant-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .coffee-chat-btn {
+            background: linear-gradient(45deg, #ec4899, #a855f7);
+            transition: all 0.3s ease;
+        }
+        .coffee-chat-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(236, 72, 153, 0.3);
+        }
+        .filter-btn {
+            transition: all 0.3s ease;
+        }
+        .filter-btn.active {
+            background: linear-gradient(45deg, #ec4899, #a855f7);
+            color: white;
+        }
+        .mentorship-request-modal {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+        }
+        .language-btn {
+            background: linear-gradient(45deg, #10b981, #059669);
+            transition: all 0.3s ease;
+        }
+        .language-btn:hover {
+            transform: scale(1.05);
+        }
+        .mentor-image {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #fff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .amharic-text {
+            font-family: 'Noto Sans Ethiopic', sans-serif;
+        }
+        [data-lang="am"] .amharic-only {
+            display: block;
+        }
+        [data-lang="am"] .english-only {
+            display: none;
+        }
+        [data-lang="en"] .amharic-only {
+            display: none;
+        }
+        [data-lang="en"] .english-only {
+            display: block;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="bg-white/80 backdrop-blur-md border-b border-pink-100 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full flex items-center justify-center">
+                        <span class="text-white font-bold text-sm">E</span>
+                    </div>
+                    <span class="text-xl font-bold text-gray-800">EhtAlem</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="index.html" class="text-gray-600 hover:text-pink-600 transition-colors english-only">Home</a>
+                    <a href="index.html" class="text-gray-600 hover:text-pink-600 transition-colors amharic-only amharic-text">ዋና ገፅ</a>
+                    
+                    <a href="forums.html" class="text-gray-600 hover:text-pink-600 transition-colors english-only">Forums</a>
+                    <a href="forums.html" class="text-gray-600 hover:text-pink-600 transition-colors amharic-only amharic-text">መድረኮች</a>
+                    
+                    <a href="mentorship.html" class="text-pink-600 font-medium english-only">Mentors</a>
+                    <a href="mentorship.html" class="text-pink-600 font-medium amharic-only amharic-text">አስተማሪዎች</a>
+                    
+                    <a href="opportunities.html" class="text-gray-600 hover:text-pink-600 transition-colors english-only">Opportunities</a>
+                    <a href="opportunities.html" class="text-gray-600 hover:text-pink-600 transition-colors amharic-only amharic-text">አጋጣሚዎች</a>
+                    
+                    <button id="languageToggle" class="language-btn text-white px-4 py-2 rounded-lg font-medium">
+                        <span class="english-only">አማርኛ</span>
+                        <span class="amharic-only amharic-text">English</span>
+                    </button>
+                    
+                    <div class="w-8 h-8 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full flex items-center justify-center">
+                        <span class="text-white text-xs font-medium">S</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-800 mb-4 english-only">AI Mentorship Engine</h1>
+            <h1 class="text-4xl font-bold text-gray-800 mb-4 amharic-only amharic-text">የኤአይ አስተማሪ ፍርሃት</h1>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto mb-6 english-only">
+                Connect with experienced Ethiopian mentors who understand your journey. Get personalized guidance from both women and men who've walked similar paths.
+            </p>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto mb-6 amharic-only amharic-text">
+                የተሞክሮ ኢትዮጵያውያን አስተማሪዎችን ያግኙ። ከተመሳሳይ መንገድ የሄዱ ሴቶችና ወንዶች ያገኛሉ።
+            </p>
+            <div class="flex justify-center space-x-4">
+                <div class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium flex items-center english-only">
+                    <i class="fas fa-users mr-2"></i>50+ Active Mentors
+                </div>
+                <div class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium flex items-center amharic-only amharic-text">
+                    <i class="fas fa-users mr-2"></i>50+ የሚያንቀሳቁስ አስተማሪዎች
+                </div>
+                <div class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium flex items-center english-only">
+                    <i class="fas fa-handshake mr-2"></i>Gender-Inclusive Mentorship
+                </div>
+                <div class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium flex items-center amharic-only amharic-text">
+                    <i class="fas fa-handshake mr-2"></i>የጾታ አካባቢ የሚያካትት አስተማሪነት
+                </div>
+                <div class="bg-purple-100 text-purple-800 px-4 py-2 rounded-full text-sm font-medium flex items-center english-only">
+                    <i class="fas fa-robot mr-2"></i>AI-Powered Matching
+                </div>
+                <div class="bg-purple-100 text-purple-800 px-4 py-2 rounded-full text-sm font-medium flex items-center amharic-only amharic-text">
+                    <i class="fas fa-robot mr-2"></i>የኤአይ ኃይል ያለው ማጋጠሚያ
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Assistant Card -->
+        <div class="ai-assistant-card rounded-2xl p-8 text-white mb-8">
+            <div class="flex items-center justify-between">
+                <div class="flex-1">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-robot text-2xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold english-only">Sister AI Assistant</h2>
+                            <h2 class="text-2xl font-bold amharic-only amharic-text">እህት ኤአይ እርዳታ</h2>
+                            <p class="text-white/80 english-only">Your personal AI mentor available 24/7</p>
+                            <p class="text-white/80 amharic-only amharic-text">የግል ኤአይ አስተማሪዎ 24/7 ዝግጁ ነው</p>
+                        </div>
+                    </div>
+                    <p class="text-white/90 mb-6 english-only">
+                        Our AI analyzes successful applications and helps you create compelling proposals, 
+                        business plans, and application materials that stand out from the competition.
+                    </p>
+                    <p class="text-white/90 mb-6 amharic-only amharic-text">
+                        ኤአይ ተሳካ ማመልከቻዎችን ይተንተናል እና ከውድድር የሚለዩ ማመልከቻዎችን፣ የቢዝነስ ዕቅዶችን እና ማመልከቻ ቁሳቁሶችን ለመፍጠር ይረዳዎታል።
+                    </p>
+                    <div class="flex space-x-4">
+                        <button class="bg-white text-purple-600 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors english-only">
+                            <i class="fas fa-comments mr-2"></i>Chat Now
+                        </button>
+                        <button class="bg-white text-purple-600 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors amharic-only amharic-text">
+                            <i class="fas fa-comments mr-2"></i>አሁን ይወያዩ
+                        </button>
+                        <button class="border border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-white/10 transition-colors english-only">
+                            <i class="fas fa-book mr-2"></i>View Resources
+                        </button>
+                        <button class="border border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-white/10 transition-colors amharic-only amharic-text">
+                            <i class="fas fa-book mr-2"></i>ምንጮችን ይመልከቱ
+                        </button>
+                    </div>
+                </div>
+                <div class="hidden lg:block">
+                    <div class="w-32 h-32 bg-white/10 rounded-full flex items-center justify-center">
+                        <i class="fas fa-brain text-6xl text-white/80"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="bg-white/80 backdrop-blur-md rounded-xl p-6 mb-8">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
+                <div class="flex flex-wrap gap-2">
+                    <button class="filter-btn px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium active english-only" data-filter="all">All Mentors</button>
+                    <button class="filter-btn px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium active amharic-only amharic-text" data-filter="all">ሁሉም አስተማሪዎች</button>
+                    
+                    <button class="filter-btn px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium english-only" data-filter="female">
+                        <i class="fas fa-female mr-2"></i>Women Mentors
+                    </button>
+                    <button class="filter-btn px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium amharic-only amharic-text" data-filter="female">
+                        <i class="fas fa-female mr-2"></i>ሴት አስተማሪዎች
+                    </button>
+                    
+                    <button class="filter-btn px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium english-only" data-filter="male">
+                        <i class="fas fa-male mr-2"></i>Men Mentors
+                    </button>
+                    <button class="filter-btn px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium amharic-only amharic-text" data-filter="male">
+                        <i class="fas fa-male mr-2"></i>ወንድ አስተማሪዎች
+                    </button>
+                    
+                    <button class="filter-btn px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium english-only" data-filter="available">
+                        <i class="fas fa-circle text-green-500 mr-2"></i>Available Now
+                    </button>
+                    <button class="filter-btn px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium amharic-only amharic-text" data-filter="available">
+                        <i class="fas fa-circle text-green-500 mr-2"></i>አሁን ዝግጁ
+                    </button>
+                </div>
+                <div class="flex gap-2">
+                    <select id="expertiseFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent english-only">
+                        <option value="">All Expertise</option>
+                        <option value="technology">Technology</option>
+                        <option value="business">Business</option>
+                        <option value="healthcare">Healthcare</option>
+                        <option value="education">Education</option>
+                        <option value="agriculture">Agriculture</option>
+                        <option value="creative">Creative Arts</option>
+                        <option value="finance">Finance</option>
+                        <option value="marketing">Marketing</option>
+                    </select>
+                    <select id="expertiseFilterAmharic" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent amharic-only amharic-text">
+                        <option value="">ሁሉም ችሎታ</option>
+                        <option value="technology">ቴክኖሎጂ</option>
+                        <option value="business">ቢዝነስ</option>
+                        <option value="healthcare">ጤና ነክ</option>
+                        <option value="education">ትምህርት</option>
+                        <option value="agriculture">እርሻ</option>
+                        <option value="creative">የፈጠራ ስነ-ጥበባት</option>
+                        <option value="finance">ፋይናንስ</option>
+                        <option value="marketing">ግብይት</option>
+                    </select>
+                    <button id="aiMatchBtn" class="px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all english-only">
+                        <i class="fas fa-magic mr-2"></i>AI Match
+                    </button>
+                    <button id="aiMatchBtnAmharic" class="px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all amharic-only amharic-text">
+                        <i class="fas fa-magic mr-2"></i>ኤአይ ማጋጠሚያ
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mentors Grid -->
+        <div id="mentorsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            <!-- Female Mentors -->
+            <div class="mentor-card rounded-2xl p-6 shadow-lg" data-gender="female" data-expertise="business technology" data-available="true">
+                <div class="flex items-center mb-4">
+                    <img src="https://kimi-web-img.moonshot.cn/img/ministerialleadership.harvard.edu/cba7eb2d971315b9502d054e85ac7322cf7190ad.jpg" alt="Hanna Tekle" class="mentor-image mr-4">
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-800">Hanna Tekle</h3>
+                        <p class="text-gray-600 english-only">Tech Entrepreneur</p>
+                        <p class="text-gray-600 amharic-only amharic-text">ቴክ ፈጣን</p>
+                        <div class="availability-badge text-white px-2 py-1 rounded-full text-xs font-medium inline-block mt-1 english-only">
+                            <i class="fas fa-circle mr-1"></i>Available
+                        </div>
+                        <div class="availability-badge text-white px-2 py-1 rounded-full text-xs font-medium inline-block mt-1 amharic-only amharic-text">
+                            <i class="fas fa-circle mr-1"></i>ዝግጁ
+                        </div>
+                    </div>
+                </div>
+                <p class="text-gray-600 mb-4 english-only">
+                    Built 3 successful startups in Addis Ababa. Specializes in helping solo entrepreneurs navigate the tech landscape without family support.
+                </p>
+                <p class="text-gray-600 mb-4 amharic-only amharic-text">
+                    በአዲስ አበባ 3 ተሳካ የቴክኖሎጂ ፈጣኖችን መሰረተች። ከቤተሰብ ድጋፍ ውጭ ቴክኖሎጂውን ለመቃኘት የሚረዱ ብቸኛ ፈጣኖችን በመደረስ ትاختصاص ያለው።
+                </p>
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium english-only">Technology</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">ቴክኖሎጂ</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium english-only">Business Strategy</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">የቢዝነስ ስትራቴጂ</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium english-only">Product Development</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">የምርት ልማት</span>
+                </div>
+                <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                    <span class="english-only"><i class="fas fa-user-graduate mr-1"></i>15 mentees</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-user-graduate mr-1"></i>15 ተማሪዎች</span>
+                    <span class="english-only"><i class="fas fa-star mr-1"></i>4.9 rating</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-star mr-1"></i>4.9 ደረጃ</span>
+                    <span class="english-only"><i class="fas fa-clock mr-1"></i>5 years exp</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-clock mr-1"></i>5 ዓመት ተሞክሮ</span>
+                </div>
+                <button class="coffee-chat-btn w-full text-white py-3 px-4 rounded-lg font-medium" onclick="requestMentorship('Hanna Tekle')">
+                    <span class="english-only"><i class="fas fa-coffee mr-2"></i>Request Virtual Coffee</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-coffee mr-2"></i>ቪርቻል ቡና ይጠይቁ</span>
+                </button>
+            </div>
+
+            <div class="mentor-card rounded-2xl p-6 shadow-lg" data-gender="female" data-expertise="healthcare business" data-available="true">
+                <div class="flex items-center mb-4">
+                    <img src="https://kimi-web-img.moonshot.cn/img/healthcare-in-europe.com/67bc887c975f0d9543d44b1bba3d5c1cec6dd388.jpg" alt="Sara Bekele" class="mentor-image mr-4">
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-800">Sara Bekele</h3>
+                        <p class="text-gray-600 english-only">Healthcare Entrepreneur</p>
+                        <p class="text-gray-600 amharic-only amharic-text">የጤና ነክ ፈጣን</p>
+                        <div class="availability-badge text-white px-2 py-1 rounded-full text-xs font-medium inline-block mt-1 english-only">
+                            <i class="fas fa-circle mr-1"></i>Available
+                        </div>
+                        <div class="availability-badge text-white px-2 py-1 rounded-full text-xs font-medium inline-block mt-1 amharic-only amharic-text">
+                            <i class="fas fa-circle mr-1"></i>ዝግጁ
+                        </div>
+                    </div>
+                </div>
+                <p class="text-gray-600 mb-4 english-only">
+                    Founded a chain of health clinics across Ethiopia. Passionate about helping women in healthcare overcome traditional barriers.
+                </p>
+                <p class="text-gray-600 mb-4 amharic-only amharic-text">
+                    በኢትዮጵያ ውስጥ የጤና ክሊኒኮችን መሰረተች። በጤና ነክ ሴቶች ባህላዊ አስቸኳዮችን ማሸነፍ ላይ ትረዳለች።
+                </p>
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium english-only">Healthcare</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">ጤና ነክ</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium english-only">Operations</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">አሰራሮች</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium english-only">Leadership</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">መሪነት</span>
+                </div>
+                <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                    <span class="english-only"><i class="fas fa-user-graduate mr-1"></i>22 mentees</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-user-graduate mr-1"></i>22 ተማሪዎች</span>
+                    <span class="english-only"><i class="fas fa-star mr-1"></i>4.8 rating</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-star mr-1"></i>4.8 ደረጃ</span>
+                    <span class="english-only"><i class="fas fa-clock mr-1"></i>8 years exp</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-clock mr-1"></i>8 ዓመት ተሞክሮ</span>
+                </div>
+                <button class="coffee-chat-btn w-full text-white py-3 px-4 rounded-lg font-medium" onclick="requestMentorship('Sara Bekele')">
+                    <span class="english-only"><i class="fas fa-coffee mr-2"></i>Request Virtual Coffee</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-coffee mr-2"></i>ቪርቻል ቡና ይጠይቁ</span>
+                </button>
+            </div>
+
+            <div class="mentor-card rounded-2xl p-6 shadow-lg" data-gender="female" data-expertise="creative business" data-available="false">
+                <div class="flex items-center mb-4">
+                    <img src="https://kimi-web-img.moonshot.cn/img/c8.alamy.com/1f99fd79b717b2af5d11eccaa5aa09d2328b4821.jpg" alt="Meron Alemu" class="mentor-image mr-4">
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-800">Meron Alemu</h3>
+                        <p class="text-gray-600 english-only">Creative Business Owner</p>
+                        <p class="text-gray-600 amharic-only amharic-text">የፈጠራ ቢዝነስ ባለቤት</p>
+                        <div class="busy-badge text-white px-2 py-1 rounded-full text-xs font-medium inline-block mt-1 english-only">
+                            <i class="fas fa-circle mr-1"></i>Busy
+                        </div>
+                        <div class="busy-badge text-white px-2 py-1 rounded-full text-xs font-medium inline-block mt-1 amharic-only amharic-text">
+                            <i class="fas fa-circle mr-1"></i>በስራ ላይ
+                        </div>
+                    </div>
+                </div>
+                <p class="text-gray-600 mb-4 english-only">
+                    Built a successful fashion brand from scratch. Expert in creative business development and traditional craft commercialization.
+                </p>
+                <p class="text-gray-600 mb-4 amharic-only amharic-text">
+                    ከዜሮ ጀምሮ ተሳካ የፋሽን ብራንድ መሰረተች። በፈጠራ ቢዝነስ ልማት እና ባህላዊ እጅግኛ ምርቶችን ንግድ ማድረግ ላይ ትاختصاص ያለው።
+                </p>
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium english-only">Creative Arts</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">የፈጠራ ስነ-ጥበባት</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium english-only">Branding</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">ብራንዲንግ</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium english-only">Retail</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">ቢዝነስ</span>
+                </div>
+                <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                    <span class="english-only"><i class="fas fa-user-graduate mr-1"></i>18 mentees</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-user-graduate mr-1"></i>18 ተማሪዎች</span>
+                    <span class="english-only"><i class="fas fa-star mr-1"></i>4.7 rating</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-star mr-1"></i>4.7 ደረጃ</span>
+                    <span class="english-only"><i class="fas fa-clock mr-1"></i>6 years exp</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-clock mr-1"></i>6 ዓመት ተሞክሮ</span>
+                </div>
+                <button class="w-full bg-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium cursor-not-allowed english-only">
+                    <i class="fas fa-clock mr-2"></i>Available Next Week
+                </button>
+                <button class="w-full bg-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium cursor-not-allowed amharic-only amharic-text">
+                    <i class="fas fa-clock mr-2"></i>በቀጣይ ሳምንት ዝግጁ
+                </button>
+            </div>
+
+            <!-- Male Mentors -->
+            <div class="mentor-card rounded-2xl p-6 shadow-lg" data-gender="male" data-expertise="finance business" data-available="true">
+                <div class="flex items-center mb-4">
+                    <img src="https://kimi-web-img.moonshot.cn/img/st3.depositphotos.com/84e244b8fe4d2adb3a8517166e8481fc39fa5bc7.jpg" alt="Daniel Kebede" class="mentor-image mr-4">
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-800">Daniel Kebede</h3>
+                        <p class="text-gray-600 english-only">Financial Advisor & Investor</p>
+                        <p class="text-gray-600 amharic-only amharic-text">ፋይናንስ አማካሪ እና ባለሀብት</p>
+                        <div class="availability-badge text-white px-2 py-1 rounded-full text-xs font-medium inline-block mt-1 english-only">
+                            <i class="fas fa-circle mr-1"></i>Available
+                        </div>
+                        <div class="availability-badge text-white px-2 py-1 rounded-full text-xs font-medium inline-block mt-1 amharic-only amharic-text">
+                            <i class="fas fa-circle mr-1"></i>ዝግጁ
+                        </div>
+                    </div>
+                </div>
+                <p class="text-gray-600 mb-4 english-only">
+                    Former bank manager turned investment advisor. Specializes in helping women entrepreneurs access funding and manage business finances effectively.
+                </p>
+                <p class="text-gray-600 mb-4 amharic-only amharic-text">
+                    ቀድሞ የባንክ ሥራ አስኪያጅ ነበር። አሁን የኢንቬስትመንት አማካሪ ነው። ሴት ፈጣኖች ፋይናንስ ማግኘት እና የቢዝነስ ፋይናንስ በተሳካ ሁኔታ ማስተዳደር ላይ ይረዳል።
+                </p>
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium english-only">Finance</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">ፋይናንስ</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium english-only">Investment</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">ኢንቬስትመንት</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium english-only">Business Planning</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">የቢዝነስ ዕቅድ</span>
+                </div>
+                <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                    <span class="english-only"><i class="fas fa-user-graduate mr-1"></i>25 mentees</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-user-graduate mr-1"></i>25 ተማሪዎች</span>
+                    <span class="english-only"><i class="fas fa-star mr-1"></i>4.9 rating</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-star mr-1"></i>4.9 ደረጃ</span>
+                    <span class="english-only"><i class="fas fa-clock mr-1"></i>12 years exp</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-clock mr-1"></i>12 ዓመት ተሞክሮ</span>
+                </div>
+                <button class="coffee-chat-btn w-full text-white py-3 px-4 rounded-lg font-medium" onclick="requestMentorship('Daniel Kebede')">
+                    <span class="english-only"><i class="fas fa-coffee mr-2"></i>Request Virtual Coffee</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-coffee mr-2"></i>ቪርቻል ቡና ይጠይቁ</span>
+                </button>
+            </div>
+
+            <div class="mentor-card rounded-2xl p-6 shadow-lg" data-gender="male" data-expertise="technology marketing" data-available="true">
+                <div class="flex items-center mb-4">
+                    <img src="https://kimi-web-img.moonshot.cn/img/israel21c.org/ed9c22158d093a74300fab55ab632ab5191e6747.jpg" alt="Kaleb Tesfaye" class="mentor-image mr-4">
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-800">Kaleb Tesfaye</h3>
+                        <p class="text-gray-600 english-only">Tech Marketing Expert</p>
+                        <p class="text-gray-600 amharic-only amharic-text">ቴክ ግብይት ባለሙያ</p>
+                        <div class="availability-badge text-white px-2 py-1 rounded-full text-xs font-medium inline-block mt-1 english-only">
+                            <i class="fas fa-circle mr-1"></i>Available
+                        </div>
+                        <div class="availability-badge text-white px-2 py-1 rounded-full text-xs font-medium inline-block mt-1 amharic-only amharic-text">
+                            <i class="fas fa-circle mr-1"></i>ዝግጁ
+                        </div>
+                    </div>
+                </div>
+                <p class="text-gray-600 mb-4 english-only">
+                    Digital marketing specialist with 10 years in tech. Helps women entrepreneurs build online presence and reach customers through digital channels.
+                </p>
+                <p class="text-gray-600 mb-4 amharic-only amharic-text">
+                    10 ዓመት በቴክኖሎጂ ውስጥ ያሳለፈ የዲጂታል ግብይት ባለሙያ ነው። ሴት ፈጣኖች የመስመር ላይ መኖሪያ እና ደንበኞችን በዲጂታል መስመሮች ማግኘት ይረዳል።
+                </p>
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium english-only">Marketing</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">ግብይት</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium english-only">Digital Strategy</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">የዲጂታል ስትራቴጂ</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium english-only">Social Media</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">ማህበራዊ ሚዲያ</span>
+                </div>
+                <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                    <span class="english-only"><i class="fas fa-user-graduate mr-1"></i>20 mentees</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-user-graduate mr-1"></i>20 ተማሪዎች</span>
+                    <span class="english-only"><i class="fas fa-star mr-1"></i>4.8 rating</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-star mr-1"></i>4.8 ደረጃ</span>
+                    <span class="english-only"><i class="fas fa-clock mr-1"></i>10 years exp</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-clock mr-1"></i>10 ዓመት ተሞክሮ</span>
+                </div>
+                <button class="coffee-chat-btn w-full text-white py-3 px-4 rounded-lg font-medium" onclick="requestMentorship('Kaleb Tesfaye')">
+                    <span class="english-only"><i class="fas fa-coffee mr-2"></i>Request Virtual Coffee</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-coffee mr-2"></i>ቪርቻል ቡና ይጠይቁ</span>
+                </button>
+            </div>
+
+            <div class="mentor-card rounded-2xl p-6 shadow-lg" data-gender="male" data-expertise="agriculture business" data-available="true">
+                <div class="flex items-center mb-4">
+                    <img src="https://kimi-web-img.moonshot.cn/img/banyanglobal.com/cf1c3aa74e674fc0ce16bbf9bf417235d7130522.jpg" alt="Amanuel Gemeda" class="mentor-image mr-4">
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-800">Amanuel Gemeda</h3>
+                        <p class="text-gray-600 english-only">Agricultural Entrepreneur</p>
+                        <p class="text-gray-600 amharic-only amharic-text">የእርሻ ፈጣን</p>
+                        <div class="availability-badge text-white px-2 py-1 rounded-full text-xs font-medium inline-block mt-1 english-only">
+                            <i class="fas fa-circle mr-1"></i>Available
+                        </div>
+                        <div class="availability-badge text-white px-2 py-1 rounded-full text-xs font-medium inline-block mt-1 amharic-only amharic-text">
+                            <i class="fas fa-circle mr-1"></i>ዝግጁ
+                        </div>
+                    </div>
+                </div>
+                <p class="text-gray-600 mb-4 english-only">
+                    Built successful agribusiness from family farm. Expert in agricultural value chains and helping women enter agricultural entrepreneurship.
+                </p>
+                <p class="text-gray-600 mb-4 amharic-only amharic-text">
+                    ከቤተሰብ እርሻ ተሳካ የእርሻ ቢዝነስ መሰረተ። በእርሻ እሴት ሰንሰሎች እና ሴቶችን ወደ እርሻ ፈጣንነት ማስገባት ላይ ትاختصاص ያለው።
+                </p>
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium english-only">Agriculture</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">እርሻ</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium english-only">Supply Chain</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">የአቅርቦት ሰንሰል</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium english-only">Export</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">ወደ ውጭ መላክ</span>
+                </div>
+                <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                    <span class="english-only"><i class="fas fa-user-graduate mr-1"></i>30 mentees</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-user-graduate mr-1"></i>30 ተማሪዎች</span>
+                    <span class="english-only"><i class="fas fa-star mr-1"></i>4.9 rating</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-star mr-1"></i>4.9 ደረጃ</span>
+                    <span class="english-only"><i class="fas fa-clock mr-1"></i>15 years exp</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-clock mr-1"></i>15 ዓመት ተሞክሮ</span>
+                </div>
+                <button class="coffee-chat-btn w-full text-white py-3 px-4 rounded-lg font-medium" onclick="requestMentorship('Amanuel Gemeda')">
+                    <span class="english-only"><i class="fas fa-coffee mr-2"></i>Request Virtual Coffee</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-coffee mr-2"></i>ቪርቻል ቡና ይጠይቁ</span>
+                </button>
+            </div>
+
+            <div class="mentor-card rounded-2xl p-6 shadow-lg" data-gender="female" data-expertise="education technology" data-available="true">
+                <div class="flex items-center mb-4">
+                    <img src="https://kimi-web-img.moonshot.cn/img/www.mercycorps.org/f9614d24bd3b46c414b04ed1e198a31927aefca5.jpg" alt="Liya Gebre" class="mentor-image mr-4">
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-800">Liya Gebre</h3>
+                        <p class="text-gray-600 english-only">EdTech Founder</p>
+                        <p class="text-gray-600 amharic-only amharic-text">የትምህርት ቴክ መሰረታዊ</p>
+                        <div class="availability-badge text-white px-2 py-1 rounded-full text-xs font-medium inline-block mt-1 english-only">
+                            <i class="fas fa-circle mr-1"></i>Available
+                        </div>
+                        <div class="availability-badge text-white px-2 py-1 rounded-full text-xs font-medium inline-block mt-1 amharic-only amharic-text">
+                            <i class="fas fa-circle mr-1"></i>ዝግጁ
+                        </div>
+                    </div>
+                </div>
+                <p class="text-gray-600 mb-4 english-only">
+                    Pioneered online learning platforms in Ethiopia. Passionate about education technology and helping women in ed-tech startups.
+                </p>
+                <p class="text-gray-600 mb-4 amharic-only amharic-text">
+                    በኢትዮጵያ የመስመር ላይ የመማር መድረኮችን መሰረተች። በትምህርት ቴክኖሎጂ እና ሴቶችን በትምህርት ቴክ ፈጣኖች ማስገባት ላይ ትረዳለች።
+                </p>
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium english-only">Education</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">ትምህርት</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium english-only">EdTech</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">ትምህርት ቴክ</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium english-only">Curriculum Design</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">የትምህርት ምድብ ዲዛይን</span>
+                </div>
+                <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                    <span class="english-only"><i class="fas fa-user-graduate mr-1"></i>12 mentees</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-user-graduate mr-1"></i>12 ተማሪዎች</span>
+                    <span class="english-only"><i class="fas fa-star mr-1"></i>4.6 rating</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-star mr-1"></i>4.6 ደረጃ</span>
+                    <span class="english-only"><i class="fas fa-clock mr-1"></i>7 years exp</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-clock mr-1"></i>7 ዓመት ተሞክሮ</span>
+                </div>
+                <button class="coffee-chat-btn w-full text-white py-3 px-4 rounded-lg font-medium" onclick="requestMentorship('Liya Gebre')">
+                    <span class="english-only"><i class="fas fa-coffee mr-2"></i>Request Virtual Coffee</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-coffee mr-2"></i>ቪርቻል ቡና ይጠይቁ</span>
+                </button>
+            </div>
+
+            <div class="mentor-card rounded-2xl p-6 shadow-lg" data-gender="male" data-expertise="business finance" data-available="false">
+                <div class="flex items-center mb-4">
+                    <img src="https://kimi-web-img.moonshot.cn/img/imageio.forbes.com/86787ea64554f0cf1e38afbfa00facd5ca5e3fbb.jpg" alt="Tesfaye Birhanu" class="mentor-image mr-4">
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-800">Tesfaye Birhanu</h3>
+                        <p class="text-gray-600 english-only">Business Consultant</p>
+                        <p class="text-gray-600 amharic-only amharic-text">የቢዝነስ አማካሪ</p>
+                        <div class="busy-badge text-white px-2 py-1 rounded-full text-xs font-medium inline-block mt-1 english-only">
+                            <i class="fas fa-circle mr-1"></i>Busy
+                        </div>
+                        <div class="busy-badge text-white px-2 py-1 rounded-full text-xs font-medium inline-block mt-1 amharic-only amharic-text">
+                            <i class="fas fa-circle mr-1"></i>በስራ ላይ
+                        </div>
+                    </div>
+                </div>
+                <p class="text-gray-600 mb-4 english-only">
+                    Former corporate executive turned consultant. Specializes in business scaling and strategic planning for women-owned businesses.
+                </p>
+                <p class="text-gray-600 mb-4 amharic-only amharic-text">
+                    ቀድሞ የኩባንያ ሥራ አስኪያጅ ነበር። አሁን አማካሪ ነው። ሴቶች የባለቤትነት ቢዝነሶችን ማስፋፋት እና ስትራቴጂ ዕቅድ ላይ ትاختصاص ያለው።
+                </p>
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium english-only">Business Strategy</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">የቢዝነስ ስትራቴጂ</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium english-only">Scaling</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">ማስፋፋት</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium english-only">Operations</span>
+                    <span class="skill-tag px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">አሰራሮች</span>
+                </div>
+                <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                    <span class="english-only"><i class="fas fa-user-graduate mr-1"></i>35 mentees</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-user-graduate mr-1"></i>35 ተማሪዎች</span>
+                    <span class="english-only"><i class="fas fa-star mr-1"></i>4.9 rating</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-star mr-1"></i>4.9 ደረጃ</span>
+                    <span class="english-only"><i class="fas fa-clock mr-1"></i>18 years exp</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-clock mr-1"></i>18 ዓመት ተሞክሮ</span>
+                </div>
+                <button class="w-full bg-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium cursor-not-allowed english-only">
+                    <i class="fas fa-clock mr-2"></i>Available Next Month
+                </button>
+                <button class="w-full bg-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium cursor-not-allowed amharic-only amharic-text">
+                    <i class="fas fa-clock mr-2"></i>በቀጣይ ወር ዝግጁ
+                </button>
+            </div>
+        </div>
+
+        <!-- Mentorship Stats -->
+        <div class="bg-white/80 backdrop-blur-md rounded-xl p-8 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center english-only">Mentorship Impact</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center amharic-only amharic-text">የአስተማሪነት ተፅእኖ</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-pink-600 mb-2 english-only">200+</div>
+                    <div class="text-3xl font-bold text-pink-600 mb-2 amharic-only amharic-text">200+</div>
+                    <div class="text-gray-600 english-only">Successful Mentorships</div>
+                    <div class="text-gray-600 amharic-only amharic-text">የተሳኩ አስተማሪነቶች</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-purple-600 mb-2 english-only">85%</div>
+                    <div class="text-3xl font-bold text-purple-600 mb-2 amharic-only amharic-text">85%</div>
+                    <div class="text-gray-600 english-only">Mentee Satisfaction Rate</div>
+                    <div class="text-gray-600 amharic-only amharic-text">የተማሪዎች ደስታ መጠን</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-blue-600 mb-2 english-only">45%</div>
+                    <div class="text-3xl font-bold text-blue-600 mb-2 amharic-only amharic-text">45%</div>
+                    <div class="text-gray-600 english-only">Business Growth Rate</div>
+                    <div class="text-gray-600 amharic-only amharic-text">የቢዝነስ እድገት መጠን</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-green-600 mb-2 english-only">1000+</div>
+                    <div class="text-3xl font-bold text-green-600 mb-2 amharic-only amharic-text">1000+</div>
+                    <div class="text-gray-600 english-only">Coffee Chat Sessions</div>
+                    <div class="text-gray-600 amharic-only amharic-text">የቡና ውይይት ስነስርአቶች</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mentorship Request Modal -->
+    <div id="mentorshipModal" class="mentorship-request-modal fixed inset-0 z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="modal-content rounded-2xl shadow-2xl max-w-md w-full">
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-2xl font-bold text-gray-800 english-only">Request Mentorship</h2>
+                        <h2 class="text-2xl font-bold text-gray-800 amharic-only amharic-text">አስተማሪነት ይጠይቁ</h2>
+                        <button id="closeMentorshipModal" class="text-gray-400 hover:text-gray-600 transition-colors">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <form id="mentorshipForm" class="p-6 space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2 english-only">Selected Mentor</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2 amharic-only amharic-text">የተመረጠ አስተማሪ</label>
+                        <input type="text" id="selectedMentor" readonly class="w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-lg">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2 english-only">What would you like to discuss? *</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2 amharic-only amharic-text">ምን ማወቅ ትፈልጋላችሁ? *</label>
+                        <select id="discussionTopic" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent english-only">
+                            <option value="">Select a topic</option>
+                            <option value="business-planning">Business Planning</option>
+                            <option value="funding-access">Accessing Funding</option>
+                            <option value="marketing-strategy">Marketing Strategy</option>
+                            <option value="scaling-business">Scaling Your Business</option>
+                            <option value="work-life-balance">Work-Life Balance</option>
+                            <option value="overcoming-challenges">Overcoming Challenges</option>
+                            <option value="skill-development">Skill Development</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <select id="discussionTopicAmharic" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent amharic-only amharic-text">
+                            <option value="">ንዑስ ርዕስ ይምረጡ</option>
+                            <option value="business-planning">የቢዝነስ ዕቅድ</option>
+                            <option value="funding-access">ፋይናንስ ማግኘት</option>
+                            <option value="marketing-strategy">የግብይት ስትራቴጂ</option>
+                            <option value="scaling-business">ቢዝነስ ማስፋፋት</option>
+                            <option value="work-life-balance">ስራ እና ሕይወት ሚዛን</option>
+                            <option value="overcoming-challenges">ችግኖችን ማሸነፍ</option>
+                            <option value="skill-development">ክህሎት ልማት</option>
+                            <option value="other">ሌላ</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2 english-only">Tell us about your current situation *</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2 amharic-only amharic-text">ስለአሁኑ ሁኔታዎ ይንገሩን *</label>
+                        <textarea id="currentSituation" required rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent english-only" placeholder="Describe your business, challenges you're facing, and what you hope to achieve..."></textarea>
+                        <textarea id="currentSituationAmharic" required rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent amharic-only amharic-text" placeholder="ቢዝነስዎን፣ የሚያጋጥሙዎትን ችግኖችን እና ምን ማግኘት እንደሚፈልጉ ይግለጹ..."></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2 english-only">Preferred meeting time</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2 amharic-only amharic-text">የምትወዱት የመገናኛ ጊዜ</label>
+                        <select id="meetingTime" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent english-only">
+                            <option value="flexible">Flexible</option>
+                            <option value="morning">Morning (9am - 12pm)</option>
+                            <option value="afternoon">Afternoon (12pm - 5pm)</option>
+                            <option value="evening">Evening (5pm - 8pm)</option>
+                        </select>
+                        <select id="meetingTimeAmharic" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent amharic-only amharic-text">
+                            <option value="flexible">የሚለዋወጥ</option>
+                            <option value="morning">ቀን (ከጠዋቱ 9 - 12)</option>
+                            <option value="afternoon">ከሰዓት በኋላ (ከ12 - 5)</option>
+                            <option value="evening">ማታ (ከ5 - 8)</option>
+                        </select>
+                    </div>
+
+                    <div class="flex space-x-4">
+                        <button type="button" id="cancelMentorship" class="flex-1 bg-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium hover:bg-gray-300 transition-colors english-only">
+                            Cancel
+                        </button>
+                        <button type="button" id="cancelMentorshipAmharic" class="flex-1 bg-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium hover:bg-gray-300 transition-colors amharic-only amharic-text">
+                            ተሰርዝ
+                        </button>
+                        <button type="submit" class="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white py-3 px-4 rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all transform hover:scale-105 english-only">
+                            <i class="fas fa-paper-plane mr-2"></i>Send Request
+                        </button>
+                        <button type="submit" class="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white py-3 px-4 rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all transform hover:scale-105 amharic-only amharic-text">
+                            <i class="fas fa-paper-plane mr-2"></i>ጥያቄ ይላኩ
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white/80 backdrop-blur-md border-t border-pink-100 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-gray-600 english-only">&copy; 2024 EhtAlem Platform. Empowering Ethiopian women entrepreneurs.</p>
+            <p class="text-gray-600 amharic-only amharic-text">&copy; 2024 እህት አለም መድረክ። ኢትዮጵያዊ ሴቶች ፈጣኖችን ማብቃት።</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Language toggle functionality
+            const languageToggle = document.getElementById('languageToggle');
+            const html = document.documentElement;
+            
+            languageToggle.addEventListener('click', function() {
+                const currentLang = html.getAttribute('data-lang');
+                const newLang = currentLang === 'en' ? 'am' : 'en';
+                html.setAttribute('data-lang', newLang);
+            });
+
+            // Filter functionality
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const mentorCards = document.querySelectorAll('.mentor-card');
+            const expertiseFilter = document.getElementById('expertiseFilter');
+            const expertiseFilterAmharic = document.getElementById('expertiseFilterAmharic');
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Update active filter
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const filter = this.dataset.filter;
+                    filterMentors(filter);
+                });
+            });
+
+            expertiseFilter.addEventListener('change', function() {
+                const expertise = this.value;
+                filterMentorsByExpertise(expertise);
+            });
+
+            expertiseFilterAmharic.addEventListener('change', function() {
+                const expertise = this.value;
+                filterMentorsByExpertise(expertise);
+            });
+
+            // AI Match functionality
+            const aiMatchBtn = document.getElementById('aiMatchBtn');
+            const aiMatchBtnAmharic = document.getElementById('aiMatchBtnAmharic');
+            
+            aiMatchBtn.addEventListener('click', showAIMatchResults);
+            aiMatchBtnAmharic.addEventListener('click', showAIMatchResults);
+
+            // Modal functionality
+            const mentorshipModal = document.getElementById('mentorshipModal');
+            const closeMentorshipModal = document.getElementById('closeMentorshipModal');
+            const cancelMentorship = document.getElementById('cancelMentorship');
+            const cancelMentorshipAmharic = document.getElementById('cancelMentorshipAmharic');
+            const mentorshipForm = document.getElementById('mentorshipForm');
+
+            closeMentorshipModal.addEventListener('click', closeModal);
+            cancelMentorship.addEventListener('click', closeModal);
+            cancelMentorshipAmharic.addEventListener('click', closeModal);
+
+            function closeModal() {
+                mentorshipModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+
+            // Close modal when clicking outside
+            mentorshipModal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeModal();
+                }
+            });
+
+            // Form submission
+            mentorshipForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                handleMentorshipRequest();
+            });
+
+            function filterMentors(filter) {
+                mentorCards.forEach(card => {
+                    if (filter === 'all' || card.dataset.gender === filter || card.dataset.available === filter) {
+                        card.style.display = 'block';
+                        anime({
+                            targets: card,
+                            opacity: [0, 1],
+                            translateY: [20, 0],
+                            duration: 300,
+                            easing: 'easeOutQuad'
+                        });
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+
+            function filterMentorsByExpertise(expertise) {
+                if (!expertise) {
+                    mentorCards.forEach(card => {
+                        card.style.display = 'block';
+                    });
+                    return;
+                }
+
+                mentorCards.forEach(card => {
+                    const cardExpertise = card.dataset.expertise;
+                    if (cardExpertise.includes(expertise)) {
+                        card.style.display = 'block';
+                        anime({
+                            targets: card,
+                            opacity: [0, 1],
+                            translateY: [20, 0],
+                            duration: 300,
+                            easing: 'easeOutQuad'
+                        });
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+
+            function showAIMatchResults() {
+                // Show top 3 matches
+                const matches = ['Hanna Tekle', 'Daniel Kebede', 'Sara Bekele'];
+                
+                const successDiv = document.createElement('div');
+                successDiv.className = 'fixed top-4 right-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-4 rounded-lg shadow-lg z-50 max-w-sm';
+                
+                const isAmharic = html.getAttribute('data-lang') === 'am';
+                if (isAmharic) {
+                    successDiv.innerHTML = `
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-magic mr-2"></i>
+                            <span class="font-bold amharic-text">ኤአይ 3 ተዛማጮችን አገኘ!</span>
+                        </div>
+                        <div class="text-sm">
+                            ${matches.map(match => `<div class="flex items-center mt-1"><i class="fas fa-user mr-2"></i>${match}</div>`).join('')}
+                        </div>
+                    `;
+                } else {
+                    successDiv.innerHTML = `
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-magic mr-2"></i>
+                            <span class="font-bold">AI Found 3 Perfect Matches!</span>
+                        </div>
+                        <div class="text-sm">
+                            ${matches.map(match => `<div class="flex items-center mt-1"><i class="fas fa-user mr-2"></i>${match}</div>`).join('')}
+                        </div>
+                    `;
+                }
+                
+                document.body.appendChild(successDiv);
+
+                setTimeout(() => {
+                    successDiv.remove();
+                }, 4000);
+            }
+
+            function handleMentorshipRequest() {
+                const mentor = document.getElementById('selectedMentor').value;
+                const topic = document.getElementById('discussionTopic').value;
+                const situation = document.getElementById('currentSituation').value;
+                
+                const topicAmharic = document.getElementById('discussionTopicAmharic').value;
+                const situationAmharic = document.getElementById('currentSituationAmharic').value;
+                
+                const currentTopic = html.getAttribute('data-lang') === 'am' ? topicAmharic : topic;
+                const currentSituation = html.getAttribute('data-lang') === 'am' ? situationAmharic : situation;
+
+                if (!mentor || !currentTopic || !currentSituation) {
+                    alert(html.getAttribute('data-lang') === 'am' ? 'እባክዎ ሁሉንም አስፈላጊ መስኮች ይሙሉ።' : 'Please fill in all required fields.');
+                    return;
+                }
+
+                // Simulate sending request
+                showSuccessMessage(mentor);
+                closeModal();
+                resetForm();
+            }
+
+            function showSuccessMessage(mentor) {
+                const successDiv = document.createElement('div');
+                successDiv.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+                
+                if (html.getAttribute('data-lang') === 'am') {
+                    successDiv.innerHTML = `<i class="fas fa-check mr-2"></i>ወደ ${mentor} የአስተማሪነት ጥያቄ ተላከ!`;
+                } else {
+                    successDiv.innerHTML = `<i class="fas fa-check mr-2"></i>Mentorship request sent to ${mentor}!`;
+                }
+                
+                document.body.appendChild(successDiv);
+
+                setTimeout(() => {
+                    successDiv.remove();
+                }, 3000);
+            }
+
+            function resetForm() {
+                document.getElementById('mentorshipForm').reset();
+            }
+
+            // Initialize animations
+            anime({
+                targets: '.mentor-card',
+                opacity: [0, 1],
+                translateY: [30, 0],
+                duration: 600,
+                delay: anime.stagger(100),
+                easing: 'easeOutQuad'
+            });
+
+            anime({
+                targets: '.ai-assistant-card',
+                scale: [0.95, 1],
+                opacity: [0, 1],
+                duration: 800,
+                easing: 'easeOutElastic(1, .8)'
+            });
+        });
+
+        // Global function for mentorship requests
+        function requestMentorship(mentorName) {
+            document.getElementById('selectedMentor').value = mentorName;
+            document.getElementById('mentorshipModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EhtAlem - AI-Powered Opportunity Gateway</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 50%, #f3e8ff 100%);
+            min-height: 100vh;
+        }
+        .opportunity-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        .opportunity-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(236, 72, 153, 0.15);
+        }
+        .deadline-urgent {
+            background: linear-gradient(45deg, #ef4444, #dc2626);
+        }
+        .deadline-soon {
+            background: linear-gradient(45deg, #f59e0b, #d97706);
+        }
+        .deadline-normal {
+            background: linear-gradient(45deg, #10b981, #059669);
+        }
+        .filter-chip {
+            transition: all 0.3s ease;
+        }
+        .filter-chip.active {
+            background: linear-gradient(45deg, #ec4899, #a855f7);
+            color: white;
+        }
+        .ai-scout-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .application-assistant {
+            background: linear-gradient(45deg, #10b981, #059669);
+        }
+        .floating-notification {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .language-btn {
+            background: linear-gradient(45deg, #10b981, #059669);
+            transition: all 0.3s ease;
+        }
+        .language-btn:hover {
+            transform: scale(1.05);
+        }
+        .amharic-text {
+            font-family: 'Noto Sans Ethiopic', sans-serif;
+        }
+        [data-lang="am"] .amharic-only {
+            display: block;
+        }
+        [data-lang="am"] .english-only {
+            display: none;
+        }
+        [data-lang="en"] .amharic-only {
+            display: none;
+        }
+        [data-lang="en"] .english-only {
+            display: block;
+        }
+        .opportunity-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="bg-white/80 backdrop-blur-md border-b border-pink-100 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full flex items-center justify-center">
+                        <span class="text-white font-bold text-sm">E</span>
+                    </div>
+                    <span class="text-xl font-bold text-gray-800">EhtAlem</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="index.html" class="text-gray-600 hover:text-pink-600 transition-colors english-only">Home</a>
+                    <a href="index.html" class="text-gray-600 hover:text-pink-600 transition-colors amharic-only amharic-text">ዋና ገፅ</a>
+                    
+                    <a href="forums.html" class="text-gray-600 hover:text-pink-600 transition-colors english-only">Forums</a>
+                    <a href="forums.html" class="text-gray-600 hover:text-pink-600 transition-colors amharic-only amharic-text">መድረኮች</a>
+                    
+                    <a href="mentorship.html" class="text-gray-600 hover:text-pink-600 transition-colors english-only">Mentors</a>
+                    <a href="mentorship.html" class="text-gray-600 hover:text-pink-600 transition-colors amharic-only amharic-text">አስተማሪዎች</a>
+                    
+                    <a href="opportunities.html" class="text-pink-600 font-medium english-only">Opportunities</a>
+                    <a href="opportunities.html" class="text-pink-600 font-medium amharic-only amharic-text">አጋጣሚዎች</a>
+                    
+                    <button id="languageToggle" class="language-btn text-white px-4 py-2 rounded-lg font-medium">
+                        <span class="english-only">አማርኛ</span>
+                        <span class="amharic-only amharic-text">English</span>
+                    </button>
+                    
+                    <div class="w-8 h-8 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full flex items-center justify-center">
+                        <span class="text-white text-xs font-medium">S</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-800 mb-4 english-only">AI-Powered Opportunity Gateway</h1>
+            <h1 class="text-4xl font-bold text-gray-800 mb-4 amharic-only amharic-text">የኤአይ ኃይል ያለው የአጋጣሚ በር</h1>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto mb-6 english-only">
+                Your personal scout continuously fetches local and international opportunities matched to your skills, 
+                location, and entrepreneurial goals. Never miss a grant, competition, or program again.
+            </p>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto mb-6 amharic-only amharic-text">
+                የግል ተዋጊዎ ከአካባቢ እና ከአለም አቀፍ አጋጣሚዎች ጋር በተመሳሳይ ክህሎት እና ግቦች የሚመሳሰሉትን ያመጣል።
+            </p>
+            <div class="flex justify-center space-x-4">
+                <div class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium flex items-center english-only">
+                    <i class="fas fa-robot mr-2"></i>AI-Powered Matching
+                </div>
+                <div class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium flex items-center amharic-only amharic-text">
+                    <i class="fas fa-robot mr-2"></i>የኤአይ ኃይል ያለው ማጋጠሚያ
+                </div>
+                <div class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium flex items-center english-only">
+                    <i class="fas fa-bell mr-2"></i>Smart Notifications
+                </div>
+                <div class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium flex items-center amharic-only amharic-text">
+                    <i class="fas fa-bell mr-2"></i>የማስታወቂያ ቀናት
+                </div>
+                <div class="bg-purple-100 text-purple-800 px-4 py-2 rounded-full text-sm font-medium flex items-center english-only">
+                    <i class="fas fa-file-alt mr-2"></i>Application Assistance
+                </div>
+                <div class="bg-purple-100 text-purple-800 px-4 py-2 rounded-full text-sm font-medium flex items-center amharic-only amharic-text">
+                    <i class="fas fa-file-alt mr-2"></i>የማመልከቻ እርዳታ
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Scout Card -->
+        <div class="ai-scout-card rounded-2xl p-8 text-white mb-8">
+            <div class="flex items-center justify-between">
+                <div class="flex-1">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-search text-2xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold english-only">Your Personal AI Scout</h2>
+                            <h2 class="text-2xl font-bold amharic-only amharic-text">የእርስዎ የግል ኤአይ ተዋጊ</h2>
+                            <p class="text-white/80 english-only">Working 24/7 to find your perfect opportunities</p>
+                            <p class="text-white/80 amharic-only amharic-text">24/7 ለመረጣ አጋጣሚዎች በመስራት ላይ</p>
+                        </div>
+                    </div>
+                    <p class="text-white/90 mb-6 english-only">
+                        Our AI continuously monitors hundreds of sources for grants, competitions, training programs, 
+                        and funding opportunities tailored specifically for Ethiopian women entrepreneurs.
+                    </p>
+                    <p class="text-white/90 mb-6 amharic-only amharic-text">
+                        ኤአይ ከኢትዮጵያዊ ሴቶች ፈጣኖች በተለይ የተዘጋጀ ፈቃዶች፣ ውድድሮች፣ ስልጠና ፕሮግራሞች እና የአቅርቦት አጋጣሚዎችን ለመቃኘት በቅዱስ ሁኔታ ይከታተላል።
+                    </p>
+                    <div class="flex space-x-4">
+                        <button id="activateScoutBtn" class="bg-white text-purple-600 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors english-only">
+                            <i class="fas fa-play mr-2"></i>Activate Scout
+                        </button>
+                        <button id="activateScoutBtnAmharic" class="bg-white text-purple-600 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors amharic-only amharic-text">
+                            <i class="fas fa-play mr-2"></i>ተዋጊን አንቃ
+                        </button>
+                        <button class="border border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-white/10 transition-colors english-only">
+                            <i class="fas fa-cog mr-2"></i>Customize Search
+                        </button>
+                        <button class="border border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-white/10 transition-colors amharic-only amharic-text">
+                            <i class="fas fa-cog mr-2"></i>ፍለጋን አስተካክል
+                        </button>
+                    </div>
+                </div>
+                <div class="hidden lg:block">
+                    <div class="w-32 h-32 bg-white/10 rounded-full flex items-center justify-center">
+                        <i class="fas fa-radar text-6xl text-white/80"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters and Search -->
+        <div class="bg-white/80 backdrop-blur-md rounded-xl p-6 mb-8">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
+                <div class="flex flex-wrap gap-2">
+                    <button class="filter-chip px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium active english-only" data-filter="all">All Opportunities</button>
+                    <button class="filter-chip px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium active amharic-only amharic-text" data-filter="all">ሁሉም አጋጣሚዎች</button>
+                    
+                    <button class="filter-chip px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium english-only" data-filter="grants">
+                        <i class="fas fa-money-bill-wave mr-2"></i>Grants
+                    </button>
+                    <button class="filter-chip px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium amharic-only amharic-text" data-filter="grants">
+                        <i class="fas fa-money-bill-wave mr-2"></i>ፈቃዶች
+                    </button>
+                    
+                    <button class="filter-chip px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium english-only" data-filter="competitions">
+                        <i class="fas fa-trophy mr-2"></i>Competitions
+                    </button>
+                    <button class="filter-chip px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium amharic-only amharic-text" data-filter="competitions">
+                        <i class="fas fa-trophy mr-2"></i>ውድድሮች
+                    </button>
+                    
+                    <button class="filter-chip px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium english-only" data-filter="training">
+                        <i class="fas fa-graduation-cap mr-2"></i>Training
+                    </button>
+                    <button class="filter-chip px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium amharic-only amharic-text" data-filter="training">
+                        <i class="fas fa-graduation-cap mr-2"></i>ስልጠና
+                    </button>
+                    
+                    <button class="filter-chip px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium english-only" data-filter="funding">
+                        <i class="fas fa-hand-holding-usd mr-2"></i>Funding
+                    </button>
+                    <button class="filter-chip px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium amharic-only amharic-text" data-filter="funding">
+                        <i class="fas fa-hand-holding-usd mr-2"></i>አቅርቦት
+                    </button>
+                </div>
+                <div class="flex gap-2">
+                    <select id="locationFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent english-only">
+                        <option value="">All Locations</option>
+                        <option value="ethiopia">Ethiopia Only</option>
+                        <option value="africa">Africa Region</option>
+                        <option value="international">International</option>
+                    </select>
+                    <select id="locationFilterAmharic" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent amharic-only amharic-text">
+                        <option value="">ሁሉም ቦታዎች</option>
+                        <option value="ethiopia">ኢትዮጵያ ብቻ</option>
+                        <option value="africa">የአፍሪካ ክልል</option>
+                        <option value="international">አለም አቀፍ</option>
+                    </select>
+                    <button id="refreshOpportunitiesBtn" class="px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all english-only">
+                        <i class="fas fa-sync-alt mr-2"></i>Refresh
+                    </button>
+                    <button id="refreshOpportunitiesBtnAmharic" class="px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all amharic-only amharic-text">
+                        <i class="fas fa-sync-alt mr-2"></i>አድስ
+                    </button>
+                </div>
+            </div>
+            
+            <div class="flex gap-4">
+                <div class="flex-1">
+                    <input type="text" id="opportunitySearch" placeholder="Search opportunities..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent english-only">
+                    <input type="text" id="opportunitySearchAmharic" placeholder="አጋጣሚዎችን ይፈልጉ..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent amharic-only amharic-text">
+                </div>
+                <button id="searchBtn" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors english-only">
+                    <i class="fas fa-search mr-2"></i>Search
+                </button>
+                <button id="searchBtnAmharic" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors amharic-only amharic-text">
+                    <i class="fas fa-search mr-2"></i>ፈልግ
+                </button>
+            </div>
+        </div>
+
+        <!-- Opportunities Grid -->
+        <div id="opportunitiesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Grant Opportunities -->
+            <div class="opportunity-card rounded-2xl p-6 shadow-lg" data-category="grants" data-location="ethiopia">
+                <img src="https://kimi-web-img.moonshot.cn/img/ministerialleadership.harvard.edu/cba7eb2d971315b9502d054e85ac7322cf7190ad.jpg" alt="Women Entrepreneurship Fund" class="opportunity-image">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="deadline-normal text-white px-3 py-1 rounded-full text-sm font-medium english-only">
+                        <i class="fas fa-clock mr-1"></i>30 days left
+                    </div>
+                    <div class="deadline-normal text-white px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">
+                        <i class="fas fa-clock mr-1"></i>ከ30 ቀናት በኋላ
+                    </div>
+                    <div class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium english-only">
+                        Ethiopia Only
+                    </div>
+                    <div class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium amharic-only amharic-text">
+                        ኢትዮጵያ ብቻ
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2 english-only">Women Entrepreneurship Fund - Ethiopia</h3>
+                <h3 class="text-xl font-bold text-gray-800 mb-2 amharic-only amharic-text">የሴቶች ፈጣንነት ፈቃድ - ኢትዮጵያ</h3>
+                <p class="text-gray-600 mb-4 english-only">
+                    $5,000-$25,000 grants for women-owned businesses in Ethiopia. Focus on technology, 
+                    agriculture, and creative industries. No collateral required.
+                </p>
+                <p class="text-gray-600 mb-4 amharic-only amharic-text">
+                    ለኢትዮጵያ ውስጥ ሴቶች የባለቤትነት ቢዝነሶች $5,000-$25,000 ፈቃዶች። ቴክኖሎጂ፣ እርሻ እና ፈጠራ ኢንዱስትሪዎች ላይ ትኩረት። የተደረገ እንኳን አይፈልግም።
+                </p>
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="bg-pink-100 text-pink-800 px-3 py-1 rounded-full text-sm font-medium english-only">Grant</span>
+                    <span class="bg-pink-100 text-pink-800 px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">ፈቃድ</span>
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium english-only">Technology</span>
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">ቴክኖሎጂ</span>
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium english-only">Agriculture</span>
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">እርሻ</span>
+                </div>
+                <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                    <span class="english-only"><i class="fas fa-calendar mr-1"></i>Deadline: Dec 15, 2024</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-calendar mr-1"></i>መጨረሻ: ታኅሣሥ 15, 2017</span>
+                    <span class="english-only"><i class="fas fa-users mr-1"></i>250+ applied</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-users mr-1"></i>250+ ተማሪዎች</span>
+                </div>
+                <div class="flex space-x-2">
+                    <button class="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white py-2 px-4 rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all english-only">
+                        <i class="fas fa-paper-plane mr-2"></i>Apply Now
+                    </button>
+                    <button class="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white py-2 px-4 rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all amharic-only amharic-text">
+                        <i class="fas fa-paper-plane mr-2"></i>አሁን ያመልከቱ
+                    </button>
+                    <button class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                        <i class="fas fa-bookmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="opportunity-card rounded-2xl p-6 shadow-lg" data-category="competitions" data-location="africa">
+                <img src="https://kimi-web-img.moonshot.cn/img/omnatigray.org/b30ebac5dee04fc4b9cfa75cff81d31c18ad284b.jpg" alt="African Women Innovators Challenge" class="opportunity-image">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="deadline-soon text-white px-3 py-1 rounded-full text-sm font-medium english-only">
+                        <i class="fas fa-clock mr-1"></i>7 days left
+                    </div>
+                    <div class="deadline-soon text-white px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">
+                        <i class="fas fa-clock mr-1"></i>ከ7 ቀናት በፊት
+                    </div>
+                    <div class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium english-only">
+                        Africa Region
+                    </div>
+                    <div class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium amharic-only amharic-text">
+                        የአፍሪካ ክልል
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2 english-only">African Women Innovators Challenge 2024</h3>
+                <h3 class="text-xl font-bold text-gray-800 mb-2 amharic-only amharic-text">የአፍሪካ ሴቶች አዳዲስ ፈጣሪዎች ውድድር 2024</h3>
+                <p class="text-gray-600 mb-4 english-only">
+                    Pan-African competition for women-led startups. Winner receives $50,000 funding 
+                    plus mentorship and incubation support.
+                </p>
+                <p class="text-gray-600 mb-4 amharic-only amharic-text">
+                    ለሴቶች የሚመሩ ፈጣኖች የአፍሪካ አቀፍ ውድድር። አሸናፊው $50,000 አቅርቦትን በተጨማሪ አስተማሪነት እና እንክብካቤ ድጋፍ ያገኛል።
+                </p>
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium english-only">Competition</span>
+                    <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">ውድድር</span>
+                    <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium english-only">Innovation</span>
+                    <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">አዳዲስ ፈጣሪዎች</span>
+                    <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium english-only">$50K Prize</span>
+                    <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">$50K ሽልማት</span>
+                </div>
+                <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                    <span class="english-only"><i class="fas fa-calendar mr-1"></i>Deadline: Nov 30, 2024</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-calendar mr-1"></i>መጨረሻ: ሕዳር 30, 2017</span>
+                    <span class="english-only"><i class="fas fa-users mr-1"></i>1.2K+ applied</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-users mr-1"></i>1.2K+ ተማሪዎች</span>
+                </div>
+                <div class="flex space-x-2">
+                    <button class="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white py-2 px-4 rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all english-only">
+                        <i class="fas fa-paper-plane mr-2"></i>Apply Now
+                    </button>
+                    <button class="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white py-2 px-4 rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all amharic-only amharic-text">
+                        <i class="fas fa-paper-plane mr-2"></i>አሁን ያመልከቱ
+                    </button>
+                    <button class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                        <i class="fas fa-bookmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="opportunity-card rounded-2xl p-6 shadow-lg" data-category="training" data-location="international">
+                <img src="https://kimi-web-img.moonshot.cn/img/www.mercycorps.org/f9614d24bd3b46c414b04ed1e198a31927aefca5.jpg" alt="Google Women Techmakers Program" class="opportunity-image">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="deadline-normal text-white px-3 py-1 rounded-full text-sm font-medium english-only">
+                        <i class="fas fa-clock mr-1"></i>45 days left
+                    </div>
+                    <div class="deadline-normal text-white px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">
+                        <i class="fas fa-clock mr-1"></i>ከ45 ቀናት በፊት
+                    </div>
+                    <div class="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs font-medium english-only">
+                        International
+                    </div>
+                    <div class="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs font-medium amharic-only amharic-text">
+                        አለም አቀፍ
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2 english-only">Google Women Techmakers Program</h3>
+                <h3 class="text-xl font-bold text-gray-800 mb-2 amharic-only amharic-text">Google ሴቶች ቴክማካሪዎች ፕሮግራም</h3>
+                <p class="text-gray-600 mb-4 english-only">
+                    6-month virtual training program for women in technology. Includes coding workshops, 
+                    leadership training, and Google certification.
+                </p>
+                <p class="text-gray-600 mb-4 amharic-only amharic-text">
+                    ለቴክኖሎጂ ውስጥ ሴቶች 6 ወር የመስመር ላይ ስልጠና ፕሮግራም። የመተግበሪያ ስራ ስልጠናዎችን፣ መሪነት ስልጠናን እና Google ሰርቲፊኬሽንን ያካትታል።
+                </p>
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium english-only">Training</span>
+                    <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">ስልጠና</span>
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium english-only">Technology</span>
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">ቴክኖሎጂ</span>
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium english-only">Certification</span>
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">ሰርቲፊኬሽን</span>
+                </div>
+                <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                    <span class="english-only"><i class="fas fa-calendar mr-1"></i>Deadline: Jan 5, 2025</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-calendar mr-1"></i>መጨረሻ: ጥር 5, 2017</span>
+                    <span class="english-only"><i class="fas fa-users mr-1"></i>500+ applied</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-users mr-1"></i>500+ ተማሪዎች</span>
+                </div>
+                <div class="flex space-x-2">
+                    <button class="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white py-2 px-4 rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all english-only">
+                        <i class="fas fa-paper-plane mr-2"></i>Apply Now
+                    </button>
+                    <button class="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white py-2 px-4 rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all amharic-only amharic-text">
+                        <i class="fas fa-paper-plane mr-2"></i>አሁን ያመልከቱ
+                    </button>
+                    <button class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                        <i class="fas fa-bookmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="opportunity-card rounded-2xl p-6 shadow-lg" data-category="funding" data-location="ethiopia">
+                <img src="https://kimi-web-img.moonshot.cn/img/borgenproject.org/0bc06adf7aabb9a3bc0060320570979307334880.jpg" alt="Addis Ababa Women Business Fund" class="opportunity-image">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="deadline-urgent text-white px-3 py-1 rounded-full text-sm font-medium english-only">
+                        <i class="fas fa-clock mr-1"></i>3 days left
+                    </div>
+                    <div class="deadline-urgent text-white px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">
+                        <i class="fas fa-clock mr-1"></i>ከ3 ቀናት በፊት
+                    </div>
+                    <div class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium english-only">
+                        Ethiopia Only
+                    </div>
+                    <div class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium amharic-only amharic-text">
+                        ኢትዮጵያ ብቻ
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2 english-only">Addis Ababa Women Business Fund</h3>
+                <h3 class="text-xl font-bold text-gray-800 mb-2 amharic-only amharic-text">አዲስ አበባ ሴቶች ቢዝነስ ፈቃድ</h3>
+                <p class="text-gray-600 mb-4 english-only">
+                    Emergency funding for women-owned businesses affected by recent economic challenges. 
+                    Quick approval process, funds available within 2 weeks.
+                </p>
+                <p class="text-gray-600 mb-4 amharic-only amharic-text">
+                    ለቅርብ የኢኮኖሚ ተግዳሮች የተጎዱ ሴቶች የባለቤትነት ቢዝነሶች ድንገተኛ አቅርቦት። ፈጣን የፍቃድ ሂደት፣ ከ2 ሳምንታት ውስጥ ገንዘብ ዝግጁ ነው።
+                </p>
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium english-only">Emergency</span>
+                    <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">ድንገተኛ</span>
+                    <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-medium english-only">Quick Funding</span>
+                    <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">ፈጣን አቅርቦት</span>
+                    <span class="bg-pink-100 text-pink-800 px-3 py-1 rounded-full text-sm font-medium english-only">Addis Ababa</span>
+                    <span class="bg-pink-100 text-pink-800 px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">አዲስ አበባ</span>
+                </div>
+                <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                    <span class="english-only"><i class="fas fa-calendar mr-1"></i>Deadline: Nov 26, 2024</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-calendar mr-1"></i>መጨረሻ: ሕዳር 26, 2017</span>
+                    <span class="english-only"><i class="fas fa-users mr-1"></i>800+ applied</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-users mr-1"></i>800+ ተማሪዎች</span>
+                </div>
+                <div class="flex space-x-2">
+                    <button class="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white py-2 px-4 rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all english-only">
+                        <i class="fas fa-paper-plane mr-2"></i>Apply Now
+                    </button>
+                    <button class="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white py-2 px-4 rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all amharic-only amharic-text">
+                        <i class="fas fa-paper-plane mr-2"></i>አሁን ያመልከቱ
+                    </button>
+                    <button class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                        <i class="fas fa-bookmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="opportunity-card rounded-2xl p-6 shadow-lg" data-category="grants" data-location="international">
+                <img src="https://kimi-web-img.moonshot.cn/img/africa.unwomen.org/3a21a30220eed3bb16a99cb5a833f6d2a0c5971c.webp" alt="UN Women Empowerment Grant" class="opportunity-image">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="deadline-normal text-white px-3 py-1 rounded-full text-sm font-medium english-only">
+                        <i class="fas fa-clock mr-1"></i>60 days left
+                    </div>
+                    <div class="deadline-normal text-white px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">
+                        <i class="fas fa-clock mr-1"></i>ከ60 ቀናት በፊት
+                    </div>
+                    <div class="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs font-medium english-only">
+                        International
+                    </div>
+                    <div class="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs font-medium amharic-only amharic-text">
+                        አለም አቀፍ
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2 english-only">UN Women Empowerment Grant</h3>
+                <h3 class="text-xl font-bold text-gray-800 mb-2 amharic-only amharic-text">UN ሴቶች ማብቃት ፈቃድ</h3>
+                <p class="text-gray-600 mb-4 english-only">
+                    Global grant program supporting women entrepreneurs in developing countries. 
+                    Focus on businesses that empower other women and promote gender equality.
+                </p>
+                <p class="text-gray-600 mb-4 amharic-only amharic-text">
+                    ለታዳጊ አገሮች ውስጥ ሴት ፈጣኖችን ድጋፍ የሚያደግ አለም አቀፍ ፈቃድ ፕሮግራም። ሌሎች ሴቶችን ማብቃት እና የጾታ እኩልነትን ማስፋፋት የሚያደግ ቢዝነሶች ላይ ትኩረት።
+                </p>
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium english-only">UN Grant</span>
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">UN ፈቃድ</span>
+                    <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium english-only">Empowerment</span>
+                    <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">ማብቃት</span>
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium english-only">Global</span>
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">አለም አቀፍ</span>
+                </div>
+                <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                    <span class="english-only"><i class="fas fa-calendar mr-1"></i>Deadline: Jan 25, 2025</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-calendar mr-1"></i>መጨረሻ: ጥር 25, 2017</span>
+                    <span class="english-only"><i class="fas fa-users mr-1"></i>2.1K+ applied</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-users mr-1"></i>2.1K+ ተማሪዎች</span>
+                </div>
+                <div class="flex space-x-2">
+                    <button class="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white py-2 px-4 rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all english-only">
+                        <i class="fas fa-paper-plane mr-2"></i>Apply Now
+                    </button>
+                    <button class="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white py-2 px-4 rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all amharic-only amharic-text">
+                        <i class="fas fa-paper-plane mr-2"></i>አሁን ያመልከቱ
+                    </button>
+                    <button class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                        <i class="fas fa-bookmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="opportunity-card rounded-2xl p-6 shadow-lg" data-category="competitions" data-location="ethiopia">
+                <img src="https://kimi-web-img.moonshot.cn/img/au.int/251fd9108c8d1556d417bcdcacd0d9e054e27e40.JPG" alt="Ethiopian Women Innovation Challenge" class="opportunity-image">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="deadline-soon text-white px-3 py-1 rounded-full text-sm font-medium english-only">
+                        <i class="fas fa-clock mr-1"></i>14 days left
+                    </div>
+                    <div class="deadline-soon text-white px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">
+                        <i class="fas fa-clock mr-1"></i>ከ14 ቀናት በፊት
+                    </div>
+                    <div class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium english-only">
+                        Ethiopia Only
+                    </div>
+                    <div class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium amharic-only amharic-text">
+                        ኢትዮጵያ ብቻ
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2 english-only">Ethiopian Women Innovation Challenge</h3>
+                <h3 class="text-xl font-bold text-gray-800 mb-2 amharic-only amharic-text">ኢትዮጵያዊ ሴቶች አዳዲስ ፈጣሪዎች ውድድር</h3>
+                <p class="text-gray-600 mb-4 english-only">
+                    National competition celebrating women innovators. Categories include agriculture, 
+                    technology, healthcare, and education. Winner gets media coverage and mentorship.
+                </p>
+                <p class="text-gray-600 mb-4 amharic-only amharic-text">
+                    ሴቶች አዳዲስ ፈጣሪዎችን ማክበር የሚያደግ አገራዊ ውድድር። ምድቦች እርሻን፣ ቴክኖሎጂን፣ ጤና ነክ እና ትምህርትን ያካትታሉ። አሸናፊው የሚዲያ ኮብ እና አስተማሪነት ያገኛል።
+                </p>
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium english-only">Innovation</span>
+                    <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">አዳዲስ ፈጣሪዎች</span>
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium english-only">National</span>
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">አገራዊ</span>
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium english-only">Media Coverage</span>
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium amharic-only amharic-text">የሚዲያ ኮብ</span>
+                </div>
+                <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                    <span class="english-only"><i class="fas fa-calendar mr-1"></i>Deadline: Dec 5, 2024</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-calendar mr-1"></i>መጨረሻ: ታኅሣሥ 5, 2017</span>
+                    <span class="english-only"><i class="fas fa-users mr-1"></i>450+ applied</span>
+                    <span class="amharic-only amharic-text"><i class="fas fa-users mr-1"></i>450+ ተማሪዎች</span>
+                </div>
+                <div class="flex space-x-2">
+                    <button class="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white py-2 px-4 rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all english-only">
+                        <i class="fas fa-paper-plane mr-2"></i>Apply Now
+                    </button>
+                    <button class="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white py-2 px-4 rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all amharic-only amharic-text">
+                        <i class="fas fa-paper-plane mr-2"></i>አሁን ያመልከቱ
+                    </button>
+                    <button class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                        <i class="fas fa-bookmark"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Assistant -->
+        <div class="application-assistant rounded-2xl p-8 text-white mb-8">
+            <div class="flex items-center justify-between">
+                <div class="flex-1">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-magic text-2xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold english-only">AI Application Assistant</h2>
+                            <h2 class="text-2xl font-bold amharic-only amharic-text">የኤአይ ማመልከቻ እርዳታ</h2>
+                            <p class="text-white/80 english-only">Get help crafting winning applications</p>
+                            <p class="text-white/80 amharic-only amharic-text">የተሳካ ማመልከቻዎችን ለመፍጠር ይረዳዎታል</p>
+                        </div>
+                    </div>
+                    <p class="text-white/90 mb-6 english-only">
+                        Our AI analyzes successful applications and helps you create compelling proposals, 
+                        business plans, and application materials that stand out from the competition.
+                    </p>
+                    <p class="text-white/90 mb-6 amharic-only amharic-text">
+                        ኤአይ ተሳካ ማመልከቻዎችን ይተንተናል እና ከውድድር የሚለዩ ማመልከቻዎችን፣ የቢዝነስ ዕቅዶችን እና ማመልከቻ ቁሳቁሶችን ለመፍጠር ይረዳዎታል።
+                    </p>
+                    <div class="flex space-x-4">
+                        <button class="bg-white text-green-600 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors english-only">
+                            <i class="fas fa-file-alt mr-2"></i>Start Application
+                        </button>
+                        <button class="bg-white text-green-600 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors amharic-only amharic-text">
+                            <i class="fas fa-file-alt mr-2"></i>ማመልከቻ ይጀምሩ
+                        </button>
+                        <button class="border border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-white/10 transition-colors english-only">
+                            <i class="fas fa-lightbulb mr-2"></i>Get Tips
+                        </button>
+                        <button class="border border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-white/10 transition-colors amharic-only amharic-text">
+                            <i class="fas fa-lightbulb mr-2"></i>አስተያየቶችን ያግኙ
+                        </button>
+                    </div>
+                </div>
+                <div class="hidden lg:block">
+                    <div class="w-32 h-32 bg-white/10 rounded-full flex items-center justify-center">
+                        <i class="fas fa-pen-fancy text-6xl text-white/80"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Tracking -->
+        <div class="bg-white/80 backdrop-blur-md rounded-xl p-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center english-only">Your Application Success Tracking</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center amharic-only amharic-text">የእርስዎ ማመልከቻ ስኬት ክትትል</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-pink-600 mb-2">12</div>
+                    <div class="text-gray-600 font-medium english-only">Applications Submitted</div>
+                    <div class="text-gray-600 font-medium amharic-only amharic-text">የቀረቡ ማመልከቻዎች</div>
+                    <div class="text-sm text-gray-500 mt-1 english-only">This year</div>
+                    <div class="text-sm text-gray-500 mt-1 amharic-only amharic-text">ይህ ዓመት</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-purple-600 mb-2">8</div>
+                    <div class="text-gray-600 font-medium english-only">Applications Successful</div>
+                    <div class="text-gray-600 font-medium amharic-only amharic-text">ተሳካ ማመልከቻዎች</div>
+                    <div class="text-sm text-gray-500 mt-1 english-only">67% success rate</div>
+                    <div class="text-sm text-gray-500 mt-1 amharic-only amharic-text">67% የተሳካ መጠን</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-green-600 mb-2">$45,000</div>
+                    <div class="text-gray-600 font-medium english-only">Funding Secured</div>
+                    <div class="text-gray-600 font-medium amharic-only amharic-text">የተያዘ አቅርቦት</div>
+                    <div class="text-sm text-gray-500 mt-1 english-only">Total value</div>
+                    <div class="text-sm text-gray-500 mt-1 amharic-only amharic-text">የጠቅላላ እሴት</div>
+                </div>
+            </div>
+            <div class="mt-6 text-center">
+                <button class="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-3 rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all english-only">
+                    <i class="fas fa-chart-line mr-2"></i>View Detailed Analytics
+                </button>
+                <button class="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-3 rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all amharic-only amharic-text">
+                    <i class="fas fa-chart-line mr-2"></i>ዝርዝር ትንታኔ ይመልከቱ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating AI Notification -->
+    <div id="aiNotification" class="floating-notification fixed bottom-20 right-6 bg-gradient-to-r from-pink-500 to-purple-600 text-white p-4 rounded-lg shadow-lg z-40 hidden">
+        <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                <i class="fas fa-robot text-sm"></i>
+            </div>
+            <div>
+                <div class="font-medium english-only">AI Scout Found 3 New Opportunities!</div>
+                <div class="font-medium amharic-only amharic-text">ኤአይ ተዋጊ 3 አዲስ አጋጣሚዎችን አገኘ!</div>
+                <div class="text-sm text-white/80 english-only">Matching your profile</div>
+                <div class="text-sm text-white/80 amharic-only amharic-text">ከእርስዎ መገለጫ ጋር ተመሳሳይ</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white/80 backdrop-blur-md border-t border-pink-100 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-gray-600 english-only">&copy; 2024 EhtAlem Platform. Empowering Ethiopian women entrepreneurs.</p>
+            <p class="text-gray-600 amharic-only amharic-text">&copy; 2024 እህት አለም መድረክ። ኢትዮጵያዊ ሴቶች ፈጣኖችን ማብቃት።</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Language toggle functionality
+            const languageToggle = document.getElementById('languageToggle');
+            const html = document.documentElement;
+            
+            languageToggle.addEventListener('click', function() {
+                const currentLang = html.getAttribute('data-lang');
+                const newLang = currentLang === 'en' ? 'am' : 'en';
+                html.setAttribute('data-lang', newLang);
+            });
+
+            // Filter functionality
+            const filterChips = document.querySelectorAll('.filter-chip');
+            const opportunityCards = document.querySelectorAll('.opportunity-card');
+            const locationFilter = document.getElementById('locationFilter');
+            const locationFilterAmharic = document.getElementById('locationFilterAmharic');
+
+            filterChips.forEach(chip => {
+                chip.addEventListener('click', function() {
+                    // Update active filter
+                    filterChips.forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const filter = this.dataset.filter;
+                    filterOpportunities(filter);
+                });
+            });
+
+            locationFilter.addEventListener('change', function() {
+                const location = this.value;
+                filterOpportunitiesByLocation(location);
+            });
+
+            locationFilterAmharic.addEventListener('change', function() {
+                const location = this.value;
+                filterOpportunitiesByLocation(location);
+            });
+
+            // Search functionality
+            const searchInput = document.getElementById('opportunitySearch');
+            const searchInputAmharic = document.getElementById('opportunitySearchAmharic');
+            const searchBtn = document.getElementById('searchBtn');
+            const searchBtnAmharic = document.getElementById('searchBtnAmharic');
+
+            searchBtn.addEventListener('click', function() {
+                const searchTerm = searchInput.value.toLowerCase();
+                filterOpportunitiesBySearch(searchTerm);
+            });
+
+            searchBtnAmharic.addEventListener('click', function() {
+                const searchTerm = searchInputAmharic.value.toLowerCase();
+                filterOpportunitiesBySearch(searchTerm);
+            });
+
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const searchTerm = this.value.toLowerCase();
+                    filterOpportunitiesBySearch(searchTerm);
+                }
+            });
+
+            searchInputAmharic.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const searchTerm = this.value.toLowerCase();
+                    filterOpportunitiesBySearch(searchTerm);
+                }
+            });
+
+            // Refresh opportunities
+            const refreshBtn = document.getElementById('refreshOpportunitiesBtn');
+            const refreshBtnAmharic = document.getElementById('refreshOpportunitiesBtnAmharic');
+            
+            refreshBtn.addEventListener('click', function() {
+                this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Refreshing...';
+                
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-sync-alt mr-2"></i>Refresh';
+                    showAINotification();
+                }, 2000);
+            });
+
+            refreshBtnAmharic.addEventListener('click', function() {
+                this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>በመጫን ላይ...';
+                
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-sync-alt mr-2"></i>አድስ';
+                    showAINotification();
+                }, 2000);
+            });
+
+            // Activate AI Scout
+            const activateScoutBtn = document.getElementById('activateScoutBtn');
+            const activateScoutBtnAmharic = document.getElementById('activateScoutBtnAmharic');
+            
+            activateScoutBtn.addEventListener('click', function() {
+                this.innerHTML = '<i class="fas fa-check mr-2"></i>Scout Activated';
+                this.classList.add('bg-green-500');
+                this.classList.remove('bg-white', 'text-purple-600');
+                this.classList.add('text-white');
+                
+                setTimeout(() => {
+                    showAINotification();
+                }, 1000);
+            });
+
+            activateScoutBtnAmharic.addEventListener('click', function() {
+                this.innerHTML = '<i class="fas fa-check mr-2"></i>ተዋጊ ተነቃ';
+                this.classList.add('bg-green-500');
+                this.classList.remove('bg-white', 'text-purple-600');
+                this.classList.add('text-white');
+                
+                setTimeout(() => {
+                    showAINotification();
+                }, 1000);
+            });
+
+            function filterOpportunities(filter) {
+                opportunityCards.forEach(card => {
+                    if (filter === 'all' || card.dataset.category === filter) {
+                        card.style.display = 'block';
+                        anime({
+                            targets: card,
+                            opacity: [0, 1],
+                            translateY: [20, 0],
+                            duration: 300,
+                            easing: 'easeOutQuad'
+                        });
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+
+            function filterOpportunitiesByLocation(location) {
+                if (!location) {
+                    opportunityCards.forEach(card => {
+                        card.style.display = 'block';
+                    });
+                    return;
+                }
+
+                opportunityCards.forEach(card => {
+                    const cardLocation = card.dataset.location;
+                    if (cardLocation === location) {
+                        card.style.display = 'block';
+                        anime({
+                            targets: card,
+                            opacity: [0, 1],
+                            translateY: [20, 0],
+                            duration: 300,
+                            easing: 'easeOutQuad'
+                        });
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+
+            function filterOpportunitiesBySearch(searchTerm) {
+                opportunityCards.forEach(card => {
+                    const title = card.querySelector('h3').textContent.toLowerCase();
+                    const content = card.querySelector('p').textContent.toLowerCase();
+                    
+                    if (title.includes(searchTerm) || content.includes(searchTerm)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+
+            function showAINotification() {
+                const notification = document.getElementById('aiNotification');
+                notification.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    notification.classList.add('hidden');
+                }, 4000);
+            }
+
+            // Initialize animations
+            anime({
+                targets: '.opportunity-card',
+                opacity: [0, 1],
+                translateY: [30, 0],
+                duration: 600,
+                delay: anime.stagger(100),
+                easing: 'easeOutQuad'
+            });
+
+            anime({
+                targets: '.ai-scout-card',
+                scale: [0.95, 1],
+                opacity: [0, 1],
+                duration: 800,
+                easing: 'easeOutElastic(1, .8)'
+            });
+
+            // Application button functionality
+            document.querySelectorAll('.opportunity-card button').forEach(button => {
+                if (button.textContent.includes('Apply Now') || button.textContent.includes('አሁን ያመልከቱ')) {
+                    button.addEventListener('click', function() {
+                        const card = this.closest('.opportunity-card');
+                        const title = card.querySelector('h3').textContent;
+                        
+                        this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
+                        
+                        setTimeout(() => {
+                            this.innerHTML = '<i class="fas fa-check mr-2"></i>Application Started';
+                            this.classList.add('bg-green-500');
+                            this.classList.remove('bg-gradient-to-r', 'from-pink-500', 'to-purple-600');
+                            
+                            showApplicationSuccess(title);
+                        }, 1500);
+                    });
+                }
+            });
+
+            function showApplicationSuccess(title) {
+                const successDiv = document.createElement('div');
+                successDiv.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+                
+                if (html.getAttribute('data-lang') === 'am') {
+                    successDiv.innerHTML = `<i class="fas fa-check mr-2"></i>"${title}" ማመልከቻ ተጀመረ!`;
+                } else {
+                    successDiv.innerHTML = `<i class="fas fa-check mr-2"></i>Application started for "${title}"!`;
+                }
+                
+                document.body.appendChild(successDiv);
+
+                setTimeout(() => {
+                    successDiv.remove();
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
